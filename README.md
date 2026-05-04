@@ -99,3 +99,4 @@ La pantalla de resultado incluye un botón que usa la Web Share API (nativo en m
 ---
 
 MOXAI · [moxai.io](https://moxai.io) · Founded by OIG
+# MojxAI
