@@ -25,6 +25,7 @@ export interface CalculationResult {
   incomePerHour: number
   moneyLostPerMonth: number
   topTasks: Task[]
+  allTasks: Task[]
 }
 
 export type HoursOption = '20-30h' | '30-40h' | '40-50h' | '50h+'

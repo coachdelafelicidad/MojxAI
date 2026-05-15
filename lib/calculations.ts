@@ -46,6 +46,7 @@ export function calculate(
   const incomePerHour = monthlyIncomeValue / (weeklyHours * 4)
   const moneyLostPerMonth = Math.round(hoursRecoverable * 4 * incomePerHour)
   const topTasks = getTopTasks(selectedTaskIds, 3)
+  const allTasks = [...selectedTasks].sort((a, b) => b.hoursPerWeek - a.hoursPerWeek)
 
   return {
     hoursLostPerWeek,
@@ -53,6 +54,7 @@ export function calculate(
     incomePerHour,
     moneyLostPerMonth,
     topTasks,
+    allTasks,
   }
 }
 

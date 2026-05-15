@@ -45,13 +45,17 @@ export function ResultScreen({ language, result, onShare }: ResultScreenProps) {
   const hoursCount = useCounter(result.hoursRecoverable)
   const moneyCount = useCounter(result.moneyLostPerMonth, 2500)
   const message = getResultMessage(result.hoursRecoverable, language)
-  const ctaUrl = language === 'es' ? 'https://moxai.io/empezar' : 'https://moxai.io/start'
-
   const formattedMoney = formatMoney(moneyCount, language)
+
+  const waMessage = language === 'es'
+    ? `Hola! Acabo de hacer el diagnóstico de MojxAI y estoy perdiendo ${result.hoursRecoverable} horas/semana. Quiero que me instalen el sistema de IA.`
+    : `Hi! I just did the MojxAI diagnostic and I'm losing ${result.hoursRecoverable} hours/week. I want the AI system installed.`
+  const ctaUrl = `https://wa.me/?text=${encodeURIComponent(waMessage)}`
 
   return (
     <div className="flex flex-col min-h-screen px-6 py-16">
       <div className="max-w-lg mx-auto w-full">
+
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -95,8 +99,8 @@ export function ResultScreen({ language, result, onShare }: ResultScreenProps) {
           <p className="text-[#888888] text-sm">{tr.resultMoneySubtitle}</p>
         </motion.div>
 
-        {/* Top tasks */}
-        {result.topTasks.length > 0 && (
+        {/* ALL tasks */}
+        {result.allTasks.length > 0 && (
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
@@ -106,18 +110,36 @@ export function ResultScreen({ language, result, onShare }: ResultScreenProps) {
             <p className="text-[#888888] text-xs font-semibold uppercase tracking-wider mb-4">
               {tr.topTasksTitle}
             </p>
-            <div className="flex flex-col gap-3">
-              {result.topTasks.map((task) => (
-                <div key={task.id} className="flex items-center gap-3">
-                  <span className="text-xl">{task.emoji}</span>
+            <div className="flex flex-col divide-y divide-[#1A1A1A]">
+              {result.allTasks.map((task, i) => (
+                <motion.div
+                  key={task.id}
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.6 + i * 0.04 }}
+                  className="flex items-center gap-3 py-3 first:pt-0 last:pb-0"
+                >
+                  <span className="text-lg flex-shrink-0">{task.emoji}</span>
                   <span className="text-sm text-[#CCCCCC] flex-1">
                     {language === 'es' ? task.nameEs : task.nameEn}
                   </span>
-                  <span className="text-[#00E5A0] text-xs font-semibold">
-                    {task.hoursPerWeek}h/sem
-                  </span>
-                </div>
+                  <div className="flex items-center gap-1 flex-shrink-0">
+                    <span className="text-[#00E5A0] text-xs font-bold">
+                      {task.hoursPerWeek}h
+                    </span>
+                    <span className="text-[#444] text-xs">/sem</span>
+                  </div>
+                </motion.div>
               ))}
+            </div>
+            {/* Total row */}
+            <div className="flex items-center justify-between mt-4 pt-4 border-t border-[#222]">
+              <span className="text-[#888888] text-xs font-semibold uppercase tracking-wider">
+                {language === 'es' ? 'Total seleccionado' : 'Total selected'}
+              </span>
+              <span className="text-white text-sm font-bold">
+                {result.hoursLostPerWeek}h/sem
+              </span>
             </div>
           </motion.div>
         )}
@@ -170,13 +192,10 @@ export function ResultScreen({ language, result, onShare }: ResultScreenProps) {
           className="text-center mt-10 pb-6"
         >
           <p className="text-[#333333] text-xs">
-            MojxAI ·{' '}
-            <a href="https://moxai.io" target="_blank" rel="noopener noreferrer" className="hover:text-[#888888] transition-colors">
-              moxai.io
-            </a>
-            {' '}· Founded by OIG
+            MojxAI · Founded by OIG
           </p>
         </motion.div>
+
       </div>
     </div>
   )
