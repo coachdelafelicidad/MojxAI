@@ -1,6 +1,6 @@
 export type Language = 'es' | 'en'
 
-export type Profile = 'professional' | 'business' | 'entrepreneur'
+export type Profile = 'professional' | 'business' | 'entrepreneur' | 'homemaker'
 
 export interface Task {
   id: string

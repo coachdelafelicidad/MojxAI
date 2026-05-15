@@ -28,6 +28,11 @@ export const translations = {
         title: 'Emprendedor',
         subtitle: 'Negocio en crecimiento, equipo pequeño o solo',
       },
+      homemaker: {
+        emoji: '🏠',
+        title: 'Ama de casa / Mamá',
+        subtitle: 'Gestión del hogar, familia y proyectos personales',
+      },
     },
     continueButton: 'Continuar',
     backButton: 'Atrás',
@@ -84,6 +89,11 @@ export const translations = {
         emoji: '🚀',
         title: 'Entrepreneur',
         subtitle: 'Growing business, small team or solo',
+      },
+      homemaker: {
+        emoji: '🏠',
+        title: 'Stay-at-home mom / Homemaker',
+        subtitle: 'Home management, family and personal projects',
       },
     },
     continueButton: 'Continue',
