@@ -6,9 +6,15 @@ export const translations = {
     stepOf: (current: number, total: number) => `Paso ${current} de ${total}`,
 
     // Hero
-    heroTitle: 'Descubre cuánto te está costando no usar IA',
-    heroSubtitle: 'Diagnóstico gratuito · 5 minutos · Sin registro',
-    heroCtaButton: 'Comenzar diagnóstico →',
+    heroTitle: 'Tu tiempo vale demasiado para perderlo en tareas que la IA ya domina',
+    heroSubtitle: 'Instalamos tu Sistema Operativo de IA en 48 horas. Sin código. Garantizado.',
+    heroCtaButton: 'Calcular mi ahorro de tiempo',
+    heroTrust: 'Sin registro · Sin tarjeta · Resultado en 5 min',
+    heroStats: [
+      { value: '48h', label: 'Instalación garantizada' },
+      { value: '70%', label: 'Tareas automatizadas' },
+      { value: '100%', label: 'Garantía de reembolso' },
+    ],
 
     // Profile
     profileQuestion: '¿Cuál describe mejor tu situación?',
@@ -170,9 +176,15 @@ export const translations = {
     stepOf: (current: number, total: number) => `Step ${current} of ${total}`,
 
     // Hero
-    heroTitle: 'Find out how much not using AI is costing you',
-    heroSubtitle: 'Free diagnostic · 5 minutes · No registration',
-    heroCtaButton: 'Start diagnostic →',
+    heroTitle: 'Your time is too valuable to waste on tasks AI already dominates',
+    heroSubtitle: 'We install your AI Operating System in 48 hours. No code. Guaranteed.',
+    heroCtaButton: 'Calculate my time savings',
+    heroTrust: 'No registration · No credit card · Result in 5 min',
+    heroStats: [
+      { value: '48h', label: 'Guaranteed installation' },
+      { value: '70%', label: 'Tasks automated' },
+      { value: '100%', label: 'Refund guarantee' },
+    ],
 
     // Profile
     profileQuestion: 'Which best describes your situation?',
