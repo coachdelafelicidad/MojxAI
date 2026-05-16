@@ -2,20 +2,22 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Language } from '@/lib/types'
-import { TASKS } from '@/lib/tasks'
+import { Language, Profile } from '@/lib/types'
+import { getTasksForProfile } from '@/lib/tasks'
 import { t } from '@/lib/translations'
 
 interface TasksScreenProps {
   language: Language
+  profile: Profile | null
   selectedTasks: string[]
   onToggleTask: (id: string) => void
   onContinue: () => void
   onBack: () => void
 }
 
-export function TasksScreen({ language, selectedTasks, onToggleTask, onContinue, onBack }: TasksScreenProps) {
+export function TasksScreen({ language, profile, selectedTasks, onToggleTask, onContinue, onBack }: TasksScreenProps) {
   const tr = t(language)
+  const tasks = getTasksForProfile(profile)
   const [showMinWarning, setShowMinWarning] = useState(false)
 
   function handleContinue() {
@@ -51,7 +53,7 @@ export function TasksScreen({ language, selectedTasks, onToggleTask, onContinue,
         </motion.div>
 
         <div className="flex flex-col gap-3 mb-8">
-          {TASKS.map((task, i) => {
+          {tasks.map((task, i) => {
             const isSelected = selectedTasks.includes(task.id)
             const label = language === 'es' ? task.nameEs : task.nameEn
 
@@ -64,14 +66,14 @@ export function TasksScreen({ language, selectedTasks, onToggleTask, onContinue,
               >
                 <button
                   onClick={() => onToggleTask(task.id)}
-                  className={`w-full text-left px-4 py-3.5 rounded-xl border transition-all duration-200 card-hover flex items-center gap-3 ${
+                  className={`w-full text-left px-4 py-3.5 rounded-xl border transition-all duration-200 flex items-center gap-3 ${
                     isSelected
                       ? 'border-[#00E5A0] bg-[#00E5A0]/5'
-                      : 'border-[#1E1E1E] bg-[#141414]'
+                      : 'border-[#1E1E1E] bg-[#141414] hover:border-[#2E2E2E]'
                   }`}
                 >
                   <span className="text-xl flex-shrink-0">{task.emoji}</span>
-                  <span className={`text-sm font-medium flex-1 ${isSelected ? 'text-white' : 'text-[#CCCCCC]'}`}>
+                  <span className={`text-sm font-medium flex-1 leading-snug ${isSelected ? 'text-white' : 'text-[#CCCCCC]'}`}>
                     {label}
                   </span>
                   <AnimatePresence>
@@ -84,7 +86,9 @@ export function TasksScreen({ language, selectedTasks, onToggleTask, onContinue,
                         transition={{ type: 'spring', stiffness: 500, damping: 25 }}
                         className="w-5 h-5 rounded-full bg-[#00E5A0] flex items-center justify-center flex-shrink-0"
                       >
-                        <span className="text-black text-[10px] font-bold">✓</span>
+                        <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+                          <path d="M1 4L3.5 6.5L9 1" stroke="black" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
                       </motion.div>
                     )}
                   </AnimatePresence>

@@ -13,7 +13,24 @@ export function HeroScreen({ language, onStart }: HeroScreenProps) {
   const tr = t(language)
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen px-6 text-center">
+    <div className="relative flex flex-col items-center justify-center min-h-screen px-6 text-center overflow-hidden">
+      {/* Background video */}
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover z-0"
+        style={{ opacity: 0.35 }}
+      >
+        <source src="/hero.mp4" type="video/mp4" />
+      </video>
+
+      {/* Dark overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#0A0A0A]/60 via-[#0A0A0A]/40 to-[#0A0A0A]/90 z-10" />
+
+      {/* Content */}
+      <div className="relative z-20 flex flex-col items-center">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -69,6 +86,7 @@ export function HeroScreen({ language, onStart }: HeroScreenProps) {
         <span>·</span>
         <span>LATAM</span>
       </motion.div>
+      </div>
     </div>
   )
 }

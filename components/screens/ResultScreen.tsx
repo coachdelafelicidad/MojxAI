@@ -10,6 +10,7 @@ interface ResultScreenProps {
   language: Language
   result: CalculationResult
   onShare: () => void
+  onRestart: () => void
 }
 
 function useCounter(target: number, duration: number = 2000) {
@@ -40,17 +41,18 @@ function useCounter(target: number, duration: number = 2000) {
   return count
 }
 
-export function ResultScreen({ language, result, onShare }: ResultScreenProps) {
+export function ResultScreen({ language, result, onShare, onRestart }: ResultScreenProps) {
   const tr = t(language)
   const hoursCount = useCounter(result.hoursRecoverable)
   const moneyCount = useCounter(result.moneyLostPerMonth, 2500)
   const message = getResultMessage(result.hoursRecoverable, language)
   const formattedMoney = formatMoney(moneyCount, language)
 
+  const waPhone = '528145912034'
   const waMessage = language === 'es'
-    ? `Hola! Acabo de hacer el diagnóstico de MojxAI y estoy perdiendo ${result.hoursRecoverable} horas/semana. Quiero que me instalen el sistema de IA.`
-    : `Hi! I just did the MojxAI diagnostic and I'm losing ${result.hoursRecoverable} hours/week. I want the AI system installed.`
-  const ctaUrl = `https://wa.me/?text=${encodeURIComponent(waMessage)}`
+    ? `Hola! Acabo de hacer el diagnóstico de MojxAI y estoy perdiendo ${result.hoursRecoverable} horas/semana en tareas manuales. Quiero que me instalen el sistema de IA.`
+    : `Hi! I just did the MojxAI diagnostic and I'm losing ${result.hoursRecoverable} hours/week on manual tasks. I want the AI system installed.`
+  const ctaUrl = `https://wa.me/${waPhone}?text=${encodeURIComponent(waMessage)}`
 
   return (
     <div className="flex flex-col min-h-screen px-6 py-16">
@@ -165,6 +167,7 @@ export function ResultScreen({ language, result, onShare }: ResultScreenProps) {
           <h3 className="font-display font-bold text-2xl mb-3">{tr.ctaTitle}</h3>
           <p className="text-[#888888] text-sm mb-6">{tr.ctaSubtitle}</p>
 
+          {/* Primary CTA → WhatsApp */}
           <a
             href={ctaUrl}
             target="_blank"
@@ -172,6 +175,14 @@ export function ResultScreen({ language, result, onShare }: ResultScreenProps) {
             className="block w-full bg-[#00E5A0] text-black font-display font-bold py-4 rounded-full text-base text-center transition-all duration-300 hover:shadow-[0_0_30px_rgba(0,229,160,0.4)] hover:scale-[1.02] mb-4"
           >
             {tr.ctaPrimary}
+          </a>
+
+          {/* Email CTA */}
+          <a
+            href="mailto:mojxai.app@gmail.com"
+            className="block w-full border border-[#2E2E2E] text-[#CCCCCC] font-display font-semibold py-3.5 rounded-full text-sm text-center transition-all duration-200 hover:border-[#00E5A0]/40 hover:text-white mb-4"
+          >
+            {language === 'es' ? '✉️ Enviar por correo' : '✉️ Send by email'}
           </a>
 
           <button
@@ -184,14 +195,20 @@ export function ResultScreen({ language, result, onShare }: ResultScreenProps) {
           <p className="text-[#333333] text-xs mt-6">{tr.disclaimer}</p>
         </motion.div>
 
-        {/* Footer */}
+        {/* Home button */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.2 }}
-          className="text-center mt-10 pb-6"
+          className="text-center mt-8 pb-6"
         >
-          <p className="text-[#333333] text-xs">
+          <button
+            onClick={onRestart}
+            className="text-[#444] text-xs hover:text-[#888] transition-colors"
+          >
+            ← {tr.homeButton}
+          </button>
+          <p className="text-[#222] text-xs mt-4">
             MojxAI · Founded by OIG
           </p>
         </motion.div>

@@ -138,7 +138,11 @@ export function DiagnosticTool() {
             <ProfileScreen
               language={state.language}
               selected={state.profile}
-              onSelect={(p: Profile) => setState(prev => ({ ...prev, profile: p }))}
+              onSelect={(p: Profile) => setState(prev => ({
+                ...prev,
+                profile: p,
+                selectedTasks: prev.profile !== p ? [] : prev.selectedTasks,
+              }))}
               onContinue={() => goTo(2)}
               onBack={() => goTo(0)}
             />
@@ -146,6 +150,7 @@ export function DiagnosticTool() {
           {state.step === 2 && (
             <TasksScreen
               language={state.language}
+              profile={state.profile}
               selectedTasks={state.selectedTasks}
               onToggleTask={toggleTask}
               onContinue={() => goTo(3)}
@@ -168,6 +173,10 @@ export function DiagnosticTool() {
               language={state.language}
               result={result}
               onShare={handleShare}
+              onRestart={() => {
+                localStorage.removeItem(STORAGE_KEY)
+                setState({ ...defaultState, language: state.language })
+              }}
             />
           )}
           {state.step === 5 && result === null && (
