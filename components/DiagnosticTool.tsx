@@ -120,6 +120,19 @@ export function DiagnosticTool() {
       <ProgressBar progress={PROGRESS[state.step] ?? 0} />
       <LanguageToggle language={state.language} onChange={setLanguage} />
 
+      {/* MojxAI logo — always visible, click to go home */}
+      {state.step > 0 && (
+        <button
+          onClick={() => {
+            localStorage.removeItem(STORAGE_KEY)
+            setState({ ...defaultState, language: state.language })
+          }}
+          className="fixed top-4 left-4 z-50 text-[#00E5A0] font-display font-bold text-sm tracking-widest uppercase hover:opacity-70 transition-opacity"
+        >
+          MojxAI
+        </button>
+      )}
+
       <AnimatePresence mode="wait" custom={direction}>
         <motion.div
           key={state.step}

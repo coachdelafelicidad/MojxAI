@@ -97,10 +97,9 @@ export const translations = {
     howItWorksTitle: '¿Cómo funciona?',
     howItWorksSteps: [
       { step: '01', title: 'Haces el diagnóstico', desc: 'Seleccionas tu perfil y las tareas que haces manualmente.' },
-      { step: '02', title: 'Mandas tu solicitud', desc: 'Nos envías tu nombre y correo. En menos de 24h recibes tu liga de pago.' },
-      { step: '03', title: 'Realizas el pago', desc: 'Pago único. Sin mensualidades ni sorpresas.' },
-      { step: '04', title: 'Llenas el cuestionario', desc: 'Te enviamos un formulario con tus datos y acceso a Claude (negocios) o ChatGPT (hogar).' },
-      { step: '05', title: 'En 48h tienes tu sistema', desc: 'Tu IA personalizada lista para trabajar contigo.' },
+      { step: '02', title: 'Realizas el pago', desc: 'Pago único. Sin mensualidades ni sorpresas. Seguro con Stripe.' },
+      { step: '03', title: 'Llenas el cuestionario', desc: 'Te enviamos un formulario con tus datos y acceso a Claude (negocios) o ChatGPT (hogar).' },
+      { step: '04', title: 'En 48h tienes tu sistema', desc: 'Tu IA personalizada lista para trabajar contigo desde el primer día.' },
     ],
 
     // Pricing
@@ -267,10 +266,9 @@ export const translations = {
     howItWorksTitle: 'How does it work?',
     howItWorksSteps: [
       { step: '01', title: 'Take the diagnostic', desc: 'Select your profile and the tasks you currently do manually.' },
-      { step: '02', title: 'Send your request', desc: 'Send us your name and email. Within 24h you receive your payment link.' },
-      { step: '03', title: 'Make the payment', desc: 'One-time payment. No monthly fees or surprises.' },
-      { step: '04', title: 'Fill the questionnaire', desc: 'We send you a form for your info and access to Claude (business) or ChatGPT (home).' },
-      { step: '05', title: 'Your system in 48h', desc: 'Your personalized AI ready to work with you.' },
+      { step: '02', title: 'Make the payment', desc: 'One-time payment. No subscriptions or surprises. Secured by Stripe.' },
+      { step: '03', title: 'Fill the questionnaire', desc: 'We send you a form for your info and access to Claude (business) or ChatGPT (home).' },
+      { step: '04', title: 'Your system in 48h', desc: 'Your personalized AI ready to work with you from day one.' },
     ],
 
     // Pricing

@@ -90,18 +90,37 @@ export function ResultScreen({ language, profile, result, onShare, onRestart }: 
   const moneyCount = useCounter(result.moneyLostPerMonth, 2500)
   const message = getResultMessage(result.hoursRecoverable, language)
   const formattedMoney = formatMoney(moneyCount, language)
+  const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null)
 
   const waPhone = '528145912034'
   const waMessage = language === 'es'
     ? `Hola! Acabo de hacer el diagnóstico de MojxAI y puedo recuperar ${result.hoursRecoverable} horas/semana. Quiero que me instalen el sistema de IA.`
     : `Hi! I just did the MojxAI diagnostic and I can recover ${result.hoursRecoverable} hours/week. I want the AI system installed.`
-  const ctaUrl = `https://wa.me/${waPhone}?text=${encodeURIComponent(waMessage)}`
+  const waUrl = `https://wa.me/${waPhone}?text=${encodeURIComponent(waMessage)}`
 
   // Determine which plan to highlight based on profile
   const highlightedPlan =
     profile === 'homemaker' || profile === 'parenting' ? 'hogar'
     : profile === 'business' ? 'business'
     : 'starter'
+
+  async function handleCheckout(planId: string) {
+    setCheckoutLoading(planId)
+    try {
+      const res = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ plan: planId, language }),
+      })
+      const data = await res.json()
+      if (data.url) window.location.href = data.url
+    } catch {
+      // fallback to WhatsApp if Stripe fails
+      window.open(waUrl, '_blank')
+    } finally {
+      setCheckoutLoading(null)
+    }
+  }
 
   return (
     <div className="flex flex-col min-h-screen px-6 py-16">
@@ -185,12 +204,15 @@ export function ResultScreen({ language, profile, result, onShare, onRestart }: 
           <h3 className="font-display font-bold text-2xl mb-3">{tr.ctaTitle}</h3>
           <p className="text-[#888888] text-sm mb-6">{tr.ctaSubtitle}</p>
 
-          <a
-            href={ctaUrl} target="_blank" rel="noopener noreferrer"
-            className="block w-full bg-[#00E5A0] text-black font-display font-bold py-4 rounded-full text-base text-center transition-all duration-300 hover:shadow-[0_0_30px_rgba(0,229,160,0.4)] hover:scale-[1.02] mb-4"
+          <button
+            onClick={() => handleCheckout(highlightedPlan)}
+            disabled={checkoutLoading !== null}
+            className="block w-full bg-[#00E5A0] text-black font-display font-bold py-4 rounded-full text-base text-center transition-all duration-300 hover:shadow-[0_0_30px_rgba(0,229,160,0.4)] hover:scale-[1.02] mb-4 disabled:opacity-70 disabled:cursor-wait"
           >
-            {tr.ctaPrimary}
-          </a>
+            {checkoutLoading === highlightedPlan
+              ? (language === 'es' ? 'Redirigiendo...' : 'Redirecting...')
+              : tr.ctaPrimary}
+          </button>
 
           <a
             href="mailto:mojxai.app@gmail.com"
@@ -281,12 +303,15 @@ export function ResultScreen({ language, profile, result, onShare, onRestart }: 
                     ))}
                   </div>
                   {isHighlighted && (
-                    <a
-                      href={ctaUrl} target="_blank" rel="noopener noreferrer"
-                      className="block w-full mt-4 bg-[#00E5A0] text-black font-display font-bold py-3 rounded-full text-sm text-center transition-all hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(0,229,160,0.35)]"
+                    <button
+                      onClick={() => handleCheckout(plan.id)}
+                      disabled={checkoutLoading !== null}
+                      className="block w-full mt-4 bg-[#00E5A0] text-black font-display font-bold py-3 rounded-full text-sm text-center transition-all hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(0,229,160,0.35)] disabled:opacity-70 disabled:cursor-wait"
                     >
-                      {language === 'es' ? 'Empezar ahora →' : 'Get started →'}
-                    </a>
+                      {checkoutLoading === plan.id
+                        ? (language === 'es' ? 'Redirigiendo...' : 'Redirecting...')
+                        : (language === 'es' ? 'Pagar ahora →' : 'Pay now →')}
+                    </button>
                   )}
                 </div>
               )
