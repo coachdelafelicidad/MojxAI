@@ -36,7 +36,13 @@ export interface CalculationResult {
   allTasks: Task[]
 }
 
-export type HoursOption = '20-30h' | '30-40h' | '40-50h' | '50h+'
+export type HoursOption = '10-20h' | '20-30h' | '30-40h' | '40-50h' | '50h+'
+
+export const HOME_PROFILES: Profile[] = ['homemaker', 'parenting']
+
+export function isHomeProfile(profile: Profile | null): boolean {
+  return profile === 'homemaker' || profile === 'parenting'
+}
 
 export interface IncomeOption {
   label: string

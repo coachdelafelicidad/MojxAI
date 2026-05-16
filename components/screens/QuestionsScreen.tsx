@@ -1,14 +1,16 @@
 'use client'
 
 import { motion, AnimatePresence } from 'framer-motion'
-import { Language, HoursOption } from '@/lib/types'
+import { Language, HoursOption, Profile, isHomeProfile } from '@/lib/types'
 import { getIncomeOptions } from '@/lib/calculations'
 import { t } from '@/lib/translations'
 
-const HOURS_OPTIONS: HoursOption[] = ['20-30h', '30-40h', '40-50h', '50h+']
+const HOURS_OPTIONS_PRO: HoursOption[] = ['20-30h', '30-40h', '40-50h', '50h+']
+const HOURS_OPTIONS_HOME: HoursOption[] = ['10-20h', '20-30h', '30-40h', '40h+' as HoursOption]
 
 interface QuestionsScreenProps {
   language: Language
+  profile: Profile | null
   hoursPerWeek: string
   monthlyIncome: string
   onHoursChange: (h: string) => void
@@ -19,6 +21,7 @@ interface QuestionsScreenProps {
 
 export function QuestionsScreen({
   language,
+  profile,
   hoursPerWeek,
   monthlyIncome,
   onHoursChange,
@@ -27,8 +30,14 @@ export function QuestionsScreen({
   onBack,
 }: QuestionsScreenProps) {
   const tr = t(language)
+  const isHome = isHomeProfile(profile)
   const incomeOptions = getIncomeOptions(language)
-  const canContinue = hoursPerWeek !== '' && monthlyIncome !== ''
+  const hoursOptions = isHome ? HOURS_OPTIONS_HOME : HOURS_OPTIONS_PRO
+
+  // Home profiles only need hours selected
+  const canContinue = isHome
+    ? hoursPerWeek !== ''
+    : hoursPerWeek !== '' && monthlyIncome !== ''
 
   return (
     <div className="flex flex-col min-h-screen px-6 py-20">
@@ -49,10 +58,10 @@ export function QuestionsScreen({
           className="mb-10"
         >
           <h2 className="font-display font-bold text-xl sm:text-2xl mb-6">
-            {tr.hoursQuestion}
+            {isHome ? tr.hoursQuestionHome : tr.hoursQuestion}
           </h2>
           <div className="flex flex-wrap gap-3">
-            {HOURS_OPTIONS.map((opt) => (
+            {hoursOptions.map((opt) => (
               <button
                 key={opt}
                 onClick={() => onHoursChange(opt)}
@@ -68,32 +77,49 @@ export function QuestionsScreen({
           </div>
         </motion.div>
 
-        {/* Income question */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="mb-10"
-        >
-          <h2 className="font-display font-bold text-xl sm:text-2xl mb-6">
-            {tr.incomeQuestion}
-          </h2>
-          <div className="flex flex-col gap-3">
-            {incomeOptions.map((opt) => (
-              <button
-                key={opt.label}
-                onClick={() => onIncomeChange(String(opt.value))}
-                className={`w-full text-left px-5 py-3.5 rounded-xl border text-sm font-medium transition-all duration-200 ${
-                  monthlyIncome === String(opt.value)
-                    ? 'border-[#00E5A0] bg-[#00E5A0]/5 text-white'
-                    : 'border-[#1E1E1E] bg-[#141414] text-[#CCCCCC] hover:border-[#00E5A0]/40'
-                }`}
-              >
-                {opt.label}
-              </button>
-            ))}
-          </div>
-        </motion.div>
+        {/* Income question — only for professional profiles */}
+        {!isHome && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="mb-10"
+          >
+            <h2 className="font-display font-bold text-xl sm:text-2xl mb-6">
+              {tr.incomeQuestion}
+            </h2>
+            <div className="flex flex-col gap-3">
+              {incomeOptions.map((opt) => (
+                <button
+                  key={opt.label}
+                  onClick={() => onIncomeChange(String(opt.value))}
+                  className={`w-full text-left px-5 py-3.5 rounded-xl border text-sm font-medium transition-all duration-200 ${
+                    monthlyIncome === String(opt.value)
+                      ? 'border-[#00E5A0] bg-[#00E5A0]/5 text-white'
+                      : 'border-[#1E1E1E] bg-[#141414] text-[#CCCCCC] hover:border-[#00E5A0]/40'
+                  }`}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          </motion.div>
+        )}
+
+        {/* Info note for home profiles */}
+        {isHome && hoursPerWeek && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-8 p-4 rounded-xl bg-[#0A1A12] border border-[#00E5A0]/15"
+          >
+            <p className="text-[#888888] text-sm leading-relaxed">
+              {language === 'es'
+                ? '💡 El cálculo usa la tarifa equivalente de servicio doméstico para estimar el valor de tu tiempo recuperado.'
+                : '💡 The calculation uses an equivalent domestic service rate to estimate the value of your recovered time.'}
+            </p>
+          </motion.div>
+        )}
 
         <AnimatePresence>
           {canContinue && (

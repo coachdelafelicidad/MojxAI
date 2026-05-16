@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Language, Profile, DiagnosticState } from '@/lib/types'
+import { Language, Profile, DiagnosticState, isHomeProfile } from '@/lib/types'
 import { calculate, getIncomeOptions } from '@/lib/calculations'
 import { LanguageToggle } from './LanguageToggle'
 import { ProgressBar } from './ProgressBar'
@@ -105,8 +105,8 @@ export function DiagnosticTool() {
   }
 
   const result =
-    state.step === 5 && state.hoursPerWeek && state.monthlyIncome
-      ? calculate(state.selectedTasks, state.hoursPerWeek, Number(state.monthlyIncome), state.language)
+    state.step === 5 && state.hoursPerWeek
+      ? calculate(state.selectedTasks, state.hoursPerWeek, Number(state.monthlyIncome), state.language, state.profile)
       : null
 
   const slideVariants = {
@@ -160,17 +160,27 @@ export function DiagnosticTool() {
           {state.step === 3 && (
             <QuestionsScreen
               language={state.language}
+              profile={state.profile}
               hoursPerWeek={state.hoursPerWeek}
               monthlyIncome={state.monthlyIncome}
               onHoursChange={(h) => setState(prev => ({ ...prev, hoursPerWeek: h }))}
               onIncomeChange={(i) => setState(prev => ({ ...prev, monthlyIncome: i }))}
-              onContinue={() => goTo(5)}
+              onContinue={() => {
+                // For home profiles, auto-set a placeholder income (unused in calc)
+                if (isHomeProfile(state.profile) && !state.monthlyIncome) {
+                  setState(prev => ({ ...prev, monthlyIncome: '1', step: 5 }))
+                  setDirection(1)
+                } else {
+                  goTo(5)
+                }
+              }}
               onBack={() => goTo(2)}
             />
           )}
           {state.step === 5 && result !== null && (
             <ResultScreen
               language={state.language}
+              profile={state.profile}
               result={result}
               onShare={handleShare}
               onRestart={() => {

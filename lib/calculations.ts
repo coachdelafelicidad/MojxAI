@@ -1,12 +1,17 @@
-import { CalculationResult, HoursOption, Language } from './types'
+import { CalculationResult, HoursOption, Language, Profile, isHomeProfile } from './types'
 import { TASKS, getTopTasks } from './tasks'
 
 export const HOURS_MAP: Record<HoursOption, number> = {
+  '10-20h': 15,
   '20-30h': 25,
   '30-40h': 35,
   '40-50h': 45,
   '50h+': 55,
 }
+
+// Fixed hourly rate for home profiles (equivalent to domestic help cost)
+const HOME_HOURLY_RATE_MXN = 120  // ~$120 MXN/h ≈ costo servicio doméstico
+const HOME_HOURLY_RATE_USD = 10   // ~$10 USD/h
 
 export const INCOME_OPTIONS_ES = [
   { label: 'Menos de $20,000 MXN', value: 15000 },
@@ -34,7 +39,8 @@ export function calculate(
   selectedTaskIds: string[],
   hoursPerWeek: string,
   monthlyIncomeValue: number,
-  _language: Language
+  language: Language,
+  profile?: Profile | null
 ): CalculationResult {
   const selectedTasks = selectedTaskIds
     .map(id => TASKS.find(t => t.id === id))
@@ -42,9 +48,20 @@ export function calculate(
 
   const hoursLostPerWeek = selectedTasks.reduce((sum, t) => sum + t.hoursPerWeek, 0)
   const hoursRecoverable = Math.round(hoursLostPerWeek * 0.7)
-  const weeklyHours = HOURS_MAP[hoursPerWeek as HoursOption] ?? 40
-  const incomePerHour = monthlyIncomeValue / (weeklyHours * 4)
-  const moneyLostPerMonth = Math.round(hoursRecoverable * 4 * incomePerHour)
+
+  let incomePerHour: number
+  let moneyLostPerMonth: number
+
+  if (isHomeProfile(profile ?? null)) {
+    // For homemaker/parenting: use fixed domestic help hourly rate
+    incomePerHour = language === 'es' ? HOME_HOURLY_RATE_MXN : HOME_HOURLY_RATE_USD
+    moneyLostPerMonth = Math.round(hoursRecoverable * 4 * incomePerHour)
+  } else {
+    const weeklyHours = HOURS_MAP[hoursPerWeek as HoursOption] ?? 40
+    incomePerHour = monthlyIncomeValue / (weeklyHours * 4)
+    moneyLostPerMonth = Math.round(hoursRecoverable * 4 * incomePerHour)
+  }
+
   const topTasks = getTopTasks(selectedTaskIds, 3)
   const allTasks = [...selectedTasks].sort((a, b) => b.hoursPerWeek - a.hoursPerWeek)
 
