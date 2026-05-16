@@ -1,9 +1,7 @@
 import Stripe from 'stripe'
 import { NextRequest, NextResponse } from 'next/server'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2026-04-22.dahlia',
-})
+export const dynamic = 'force-dynamic'
 
 const PLANS: Record<string, { name_es: string; name_en: string; amount: number }> = {
   hogar: {
@@ -25,6 +23,9 @@ const PLANS: Record<string, { name_es: string; name_en: string; amount: number }
 
 export async function POST(req: NextRequest) {
   try {
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+      apiVersion: '2026-04-22.dahlia',
+    })
     const { plan, language } = await req.json() as { plan: string; language: string }
     const planData = PLANS[plan] ?? PLANS.starter
     const origin = req.headers.get('origin') ?? 'https://mojxai.vercel.app'
