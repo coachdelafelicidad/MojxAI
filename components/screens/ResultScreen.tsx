@@ -294,31 +294,31 @@ export function ResultScreen({ language, profile, result, onShare, onRestart }: 
           </div>
         </motion.div>
 
-        {/* ══════════════════════════════════════ */}
-        {/* ── GUARANTEE 10/100 ── */}
-        {/* ══════════════════════════════════════ */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.3 }}
-          className="mb-10 rounded-2xl bg-[#0A1A12] border border-[#00E5A0]/20 p-6 text-center"
-          style={{ boxShadow: '0 0 30px rgba(0,229,160,0.06)' }}
-        >
-          <div className="w-12 h-12 rounded-full bg-[#00E5A0]/10 border border-[#00E5A0]/20 flex items-center justify-center mx-auto mb-4">
-            <ShieldIcon />
-          </div>
-          <h4 className="font-display font-bold text-2xl text-[#00E5A0] mb-3">{tr.guaranteeTitle}</h4>
-          <p className="text-[#CCCCCC] text-sm leading-relaxed mb-5">{tr.guaranteeDesc}</p>
-          <div className="flex flex-wrap items-center justify-center gap-4">
-            {tr.guaranteeBadges.map((badge) => (
-              <div key={badge} className="flex items-center gap-1.5">
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                  <circle cx="6" cy="6" r="6" fill="#00E5A0" fillOpacity="0.2"/>
-                  <path d="M3.5 6L5 7.5L8.5 4" stroke="#00E5A0" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-                <span className="text-[#888] text-xs">{badge}</span>
-              </div>
-            ))}
-          </div>
-        </motion.div>
+        {/* ── GUARANTEE 10/100 — only for professional/business profiles ── */}
+        {!isHome && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.3 }}
+            className="mb-10 rounded-2xl bg-[#0A1A12] border border-[#00E5A0]/20 p-6 text-center"
+            style={{ boxShadow: '0 0 30px rgba(0,229,160,0.06)' }}
+          >
+            <div className="w-12 h-12 rounded-full bg-[#00E5A0]/10 border border-[#00E5A0]/20 flex items-center justify-center mx-auto mb-4">
+              <ShieldIcon />
+            </div>
+            <h4 className="font-display font-bold text-2xl text-[#00E5A0] mb-3">{tr.guaranteeTitle}</h4>
+            <p className="text-[#CCCCCC] text-sm leading-relaxed mb-5">{tr.guaranteeDesc}</p>
+            <div className="flex flex-wrap items-center justify-center gap-4">
+              {tr.guaranteeBadges.map((badge) => (
+                <div key={badge} className="flex items-center gap-1.5">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                    <circle cx="6" cy="6" r="6" fill="#00E5A0" fillOpacity="0.2"/>
+                    <path d="M3.5 6L5 7.5L8.5 4" stroke="#00E5A0" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                  <span className="text-[#888] text-xs">{badge}</span>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        )}
 
         {/* ══════════════════════════════════════ */}
         {/* ── FAQ ── */}

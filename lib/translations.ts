@@ -114,7 +114,7 @@ export const translations = {
         currency: 'USD',
         billing: 'pago único',
         desc: 'IA para tu hogar y familia',
-        features: ['Sistema Claude personalizado', 'Hasta 10 proyectos activos', 'Instalación en 48h', 'Manual de uso', 'Garantía 10/100'],
+        features: ['Sistema ChatGPT personalizado', 'Hasta 10 proyectos activos', 'Instalación en 48h', 'Manual de uso'],
         profiles: ['homemaker', 'parenting'],
       },
       {
@@ -284,7 +284,7 @@ export const translations = {
         currency: 'USD',
         billing: 'one-time payment',
         desc: 'AI for your home & family',
-        features: ['Personalized Claude system', 'Up to 10 active projects', '48h installation', 'Usage manual', '10/100 Guarantee'],
+        features: ['Personalized ChatGPT system', 'Up to 10 active projects', '48h installation', 'Usage manual'],
         profiles: ['homemaker', 'parenting'],
       },
       {
