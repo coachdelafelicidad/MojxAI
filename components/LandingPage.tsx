@@ -339,7 +339,7 @@ export function LandingPage() {
             initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18 }}
             className="text-[#999] text-base sm:text-lg mb-10 max-w-xl leading-relaxed"
           >
-            No necesitas estudiar más. Nosotros entramos a tu cuenta, la configuramos con tus propios documentos y procesos reales, y te la dejamos lista para usar en 48 horas.
+            No necesitas estudiar más. Nosotros entramos a tu cuenta, la configuramos con tus propias necesidades y procesos reales, y te la dejamos lista para sacar el máximo provecho a la IA en 48 horas.
           </motion.p>
 
           <motion.div
