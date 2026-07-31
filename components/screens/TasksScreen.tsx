@@ -15,10 +15,26 @@ interface TasksScreenProps {
   onBack: () => void
 }
 
+const MAX_TASKS = 10
+
 export function TasksScreen({ language, profile, selectedTasks, onToggleTask, onContinue, onBack }: TasksScreenProps) {
   const tr = t(language)
   const tasks = getTasksForProfile(profile)
   const [showMinWarning, setShowMinWarning] = useState(false)
+  const [showMaxWarning, setShowMaxWarning] = useState(false)
+
+  const atMax = selectedTasks.length >= MAX_TASKS
+
+  function handleToggle(id: string) {
+    const isSelected = selectedTasks.includes(id)
+    if (!isSelected && atMax) {
+      setShowMaxWarning(true)
+      setTimeout(() => setShowMaxWarning(false), 3000)
+      return
+    }
+    setShowMaxWarning(false)
+    onToggleTask(id)
+  }
 
   function handleContinue() {
     if (selectedTasks.length < 3) {
@@ -42,19 +58,49 @@ export function TasksScreen({ language, profile, selectedTasks, onToggleTask, on
         </motion.button>
 
         <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.05 }}
+          className="flex items-center gap-3 mb-5"
+        >
+          <div className="w-1.5 h-1.5 rounded-full bg-[#00E5A0]" />
+          <span className="text-[#00E5A0] text-[10px] font-bold tracking-[0.25em] uppercase">
+            {language === 'es' ? 'PASO 2 DE 3' : 'STEP 2 OF 3'}
+          </span>
+          <div className="h-px flex-1 bg-[#1A1A1A]" />
+        </motion.div>
+
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
+          transition={{ delay: 0.1 }}
+          className="mb-6"
         >
           <h2 className="font-display font-bold text-2xl sm:text-3xl mb-2">
             {tr.tasksTitle}
           </h2>
-          <p className="text-[#888888] text-sm">{tr.tasksSubtitle}</p>
+          <p className="text-[#555] text-sm">{tr.tasksSubtitle}</p>
+        </motion.div>
+
+        {/* Counter bar */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.1 }}
+          className="flex items-center justify-between mb-4"
+        >
+          <span className="text-xs text-[#555]">
+            {language === 'es' ? 'Seleccionadas' : 'Selected'}
+          </span>
+          <span className={`text-xs font-semibold tabular-nums ${atMax ? 'text-[#00E5A0]' : 'text-[#888]'}`}>
+            {selectedTasks.length} / {MAX_TASKS}
+          </span>
         </motion.div>
 
         <div className="flex flex-col gap-3 mb-8">
           {tasks.map((task, i) => {
             const isSelected = selectedTasks.includes(task.id)
+            const isDisabled = !isSelected && atMax
             const label = language === 'es' ? task.nameEs : task.nameEn
 
             return (
@@ -65,11 +111,13 @@ export function TasksScreen({ language, profile, selectedTasks, onToggleTask, on
                 transition={{ delay: i * 0.04 }}
               >
                 <button
-                  onClick={() => onToggleTask(task.id)}
-                  className={`w-full text-left px-4 py-3.5 rounded-xl border transition-all duration-200 flex items-center gap-3 ${
+                  onClick={() => handleToggle(task.id)}
+                  className={`w-full text-left px-4 py-4 rounded-xl border transition-all duration-200 flex items-center gap-3 ${
                     isSelected
-                      ? 'border-[#00E5A0] bg-[#00E5A0]/5'
-                      : 'border-[#1E1E1E] bg-[#141414] hover:border-[#2E2E2E]'
+                      ? 'border-[#00E5A0] bg-[#00E5A0]/5 shadow-[0_0_20px_rgba(0,229,160,0.08)]'
+                      : isDisabled
+                        ? 'border-[#161616] bg-[#0A0A0A] opacity-30 cursor-not-allowed'
+                        : 'border-[#1A1A1A] bg-[#111] hover:border-[#2A2A2A] hover:bg-[#141414]'
                   }`}
                 >
                   <span className="text-xl flex-shrink-0">{task.emoji}</span>
@@ -99,9 +147,25 @@ export function TasksScreen({ language, profile, selectedTasks, onToggleTask, on
         </div>
 
         <div className="sticky bottom-6">
-          <AnimatePresence>
-            {showMinWarning && (
+          <AnimatePresence mode="wait">
+            {showMaxWarning && (
+              <motion.div
+                key="max"
+                initial={{ opacity: 0, y: 5 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                className="flex items-center justify-center gap-2 mb-3"
+              >
+                <span className="text-amber-400 text-sm">
+                  {language === 'es'
+                    ? '⚠️ Máximo 10 tareas incluidas en el plan. Deselecciona una para cambiar.'
+                    : '⚠️ Max 10 tasks included in the plan. Deselect one to swap.'}
+                </span>
+              </motion.div>
+            )}
+            {showMinWarning && !showMaxWarning && (
               <motion.p
+                key="min"
                 initial={{ opacity: 0, y: 5 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}

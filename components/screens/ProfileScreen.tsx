@@ -94,16 +94,30 @@ export function ProfileScreen({ language, selected, onSelect, onContinue, onBack
           ← {tr.backButton}
         </motion.button>
 
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.05 }}
+          className="flex items-center gap-3 mb-5"
+        >
+          <div className="w-1.5 h-1.5 rounded-full bg-[#00E5A0]" />
+          <span className="text-[#00E5A0] text-[10px] font-bold tracking-[0.25em] uppercase">
+            {language === 'es' ? 'PASO 1 DE 3' : 'STEP 1 OF 3'}
+          </span>
+          <div className="h-px flex-1 bg-[#1A1A1A]" />
+        </motion.div>
+
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
           className="font-display font-bold text-2xl sm:text-3xl mb-6"
         >
           {tr.profileQuestion}
         </motion.h2>
 
         {/* 2-column grid */}
-        <div className="grid grid-cols-2 gap-3 flex-1">
+        <div className="grid grid-cols-2 gap-3">
           {profiles.map((profile, i) => {
             const info = tr.profiles[profile]
             const isSelected = selected === profile
@@ -120,8 +134,8 @@ export function ProfileScreen({ language, selected, onSelect, onContinue, onBack
                   onClick={() => onSelect(profile)}
                   className={`w-full h-full text-left p-4 rounded-2xl border transition-all duration-300 flex flex-col gap-3 ${
                     isSelected
-                      ? 'border-[#00E5A0] bg-[#00E5A0]/5 shadow-[0_0_24px_rgba(0,229,160,0.12)]'
-                      : 'border-[#1E1E1E] bg-[#141414] hover:border-[#2E2E2E]'
+                      ? 'border-[#00E5A0] bg-[#00E5A0]/5 shadow-[0_0_30px_rgba(0,229,160,0.15)]'
+                      : 'border-[#1A1A1A] bg-[#111] hover:border-[#2A2A2A] hover:bg-[#141414] hover:shadow-[0_0_20px_rgba(255,255,255,0.02)]'
                   }`}
                 >
                   {/* Icon + check row */}
@@ -164,6 +178,71 @@ export function ProfileScreen({ language, selected, onSelect, onContinue, onBack
             )
           })}
         </div>
+
+        {/* ── Contact options ─────────────────────────────────────── */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.55 }}
+          className="mt-4 flex flex-col gap-3"
+        >
+          {/* Custom profile */}
+          <a
+            href={`mailto:mojxai.app@gmail.com?subject=${encodeURIComponent(
+              language === 'es' ? 'Consulta MojxAI — Mi perfil no está en la lista' : 'MojxAI Inquiry — My profile is not listed'
+            )}&body=${encodeURIComponent(
+              language === 'es'
+                ? 'Hola, me interesa MojxAI pero mi perfil no está entre las opciones.\n\nMi nombre:\nMi profesión / actividad:\nLo que necesito automatizar:\n\n¿Pueden ayudarme?'
+                : 'Hi, I\'m interested in MojxAI but my profile is not listed.\n\nMy name:\nMy profession / activity:\nWhat I want to automate:\n\nCan you help me?'
+            )}`}
+            className="w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl border border-dashed border-[#2A2A2A] bg-[#111] hover:border-[#00E5A0]/30 hover:bg-[#0A1A12]/50 transition-all duration-200 group"
+          >
+            <div className="w-9 h-9 rounded-xl bg-[#1A1A1A] border border-[#252525] flex items-center justify-center flex-shrink-0 group-hover:border-[#00E5A0]/20">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="9" stroke="#555" strokeWidth="2"/>
+                <path d="M12 8v4M12 16h.01" stroke="#555" strokeWidth="2" strokeLinecap="round"/>
+              </svg>
+            </div>
+            <div className="flex-1 text-left">
+              <p className="text-[#888] text-sm font-medium group-hover:text-[#CCCCCC] transition-colors">
+                {language === 'es' ? 'Mi perfil no está aquí' : 'My profile is not listed'}
+              </p>
+              <p className="text-[#444] text-xs group-hover:text-[#555] transition-colors">
+                {language === 'es' ? 'Escríbenos y creamos tu plan personalizado' : 'Contact us and we\'ll build your custom plan'}
+              </p>
+            </div>
+            <span className="text-[#444] text-xs group-hover:text-[#00E5A0] transition-colors">✉</span>
+          </a>
+
+          {/* Enterprise / multi-area */}
+          <a
+            href={`mailto:mojxai.app@gmail.com?subject=${encodeURIComponent(
+              language === 'es' ? 'Consulta MojxAI — Empresa con múltiples áreas' : 'MojxAI Inquiry — Company with multiple departments'
+            )}&body=${encodeURIComponent(
+              language === 'es'
+                ? 'Hola, tengo una empresa con múltiples áreas y me interesa implementar IA en varios departamentos.\n\nEmpresa:\nÁreas que necesitan IA:\nTamaño del equipo:\nPrincipal objetivo:\n\n¿Pueden cotizarnos una solución personalizada?'
+                : 'Hi, I have a company with multiple departments and I\'m interested in implementing AI across several teams.\n\nCompany:\nDepartments that need AI:\nTeam size:\nMain goal:\n\nCan you provide a custom quote?'
+            )}`}
+            className="w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl border border-dashed border-[#2A2A2A] bg-[#111] hover:border-[#00E5A0]/30 hover:bg-[#0A1A12]/50 transition-all duration-200 group"
+          >
+            <div className="w-9 h-9 rounded-xl bg-[#1A1A1A] border border-[#252525] flex items-center justify-center flex-shrink-0 group-hover:border-[#00E5A0]/20">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <rect x="2" y="7" width="20" height="14" rx="2" stroke="#555" strokeWidth="2"/>
+                <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" stroke="#555" strokeWidth="2"/>
+                <path d="M12 12v4M10 14h4" stroke="#555" strokeWidth="2" strokeLinecap="round"/>
+              </svg>
+            </div>
+            <div className="flex-1 text-left">
+              <p className="text-[#888] text-sm font-medium group-hover:text-[#CCCCCC] transition-colors">
+                {language === 'es' ? 'Empresa con múltiples áreas' : 'Company with multiple departments'}
+              </p>
+              <p className="text-[#444] text-xs group-hover:text-[#555] transition-colors">
+                {language === 'es' ? 'Solución enterprise a medida — contáctanos' : 'Enterprise custom solution — contact us'}
+              </p>
+            </div>
+            <span className="text-[#444] text-xs group-hover:text-[#00E5A0] transition-colors">✉</span>
+          </a>
+        </motion.div>
 
         <AnimatePresence>
           {selected && (

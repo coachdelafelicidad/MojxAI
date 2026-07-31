@@ -34,7 +34,7 @@ export function QuestionsScreen({
   const incomeOptions = getIncomeOptions(language)
   const hoursOptions = isHome ? HOURS_OPTIONS_HOME : HOURS_OPTIONS_PRO
 
-  // Home profiles only need hours selected
+  // Home profiles only need hours selected; "prefer_not" counts as a valid income answer
   const canContinue = isHome
     ? hoursPerWeek !== ''
     : hoursPerWeek !== '' && monthlyIncome !== ''
@@ -46,29 +46,43 @@ export function QuestionsScreen({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           onClick={onBack}
-          className="text-[#888888] text-sm mb-8 block hover:text-white transition-colors"
+          className="text-[#888888] text-sm mb-6 block hover:text-white transition-colors"
         >
           ← {tr.backButton}
         </motion.button>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.05 }}
+          className="flex items-center gap-3 mb-6"
+        >
+          <div className="w-1.5 h-1.5 rounded-full bg-[#00E5A0]" />
+          <span className="text-[#00E5A0] text-[10px] font-bold tracking-[0.25em] uppercase">
+            {language === 'es' ? 'PASO 3 DE 3' : 'STEP 3 OF 3'}
+          </span>
+          <div className="h-px flex-1 bg-[#1A1A1A]" />
+        </motion.div>
 
         {/* Hours question */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
           className="mb-10"
         >
           <h2 className="font-display font-bold text-xl sm:text-2xl mb-6">
             {isHome ? tr.hoursQuestionHome : tr.hoursQuestion}
           </h2>
-          <div className="flex flex-wrap gap-3">
+          <div className="grid grid-cols-2 gap-3">
             {hoursOptions.map((opt) => (
               <button
                 key={opt}
                 onClick={() => onHoursChange(opt)}
-                className={`px-6 py-3 rounded-full text-sm font-semibold border transition-all duration-200 ${
+                className={`py-4 rounded-2xl text-sm font-bold border transition-all duration-200 ${
                   hoursPerWeek === opt
-                    ? 'bg-[#00E5A0] text-black border-[#00E5A0]'
-                    : 'border-[#1E1E1E] bg-[#141414] text-[#CCCCCC] hover:border-[#00E5A0]/40'
+                    ? 'bg-[#00E5A0] text-black border-[#00E5A0] shadow-[0_0_20px_rgba(0,229,160,0.25)]'
+                    : 'border-[#1A1A1A] bg-[#111] text-[#CCCCCC] hover:border-[#2A2A2A] hover:bg-[#141414]'
                 }`}
               >
                 {opt}
@@ -82,26 +96,51 @@ export function QuestionsScreen({
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
+            transition={{ delay: 0.15 }}
             className="mb-10"
           >
             <h2 className="font-display font-bold text-xl sm:text-2xl mb-6">
               {tr.incomeQuestion}
             </h2>
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-2">
               {incomeOptions.map((opt) => (
                 <button
                   key={opt.label}
                   onClick={() => onIncomeChange(String(opt.value))}
-                  className={`w-full text-left px-5 py-3.5 rounded-xl border text-sm font-medium transition-all duration-200 ${
+                  className={`w-full text-left px-5 py-4 rounded-xl border text-sm font-medium transition-all duration-200 flex items-center justify-between ${
                     monthlyIncome === String(opt.value)
-                      ? 'border-[#00E5A0] bg-[#00E5A0]/5 text-white'
-                      : 'border-[#1E1E1E] bg-[#141414] text-[#CCCCCC] hover:border-[#00E5A0]/40'
+                      ? 'border-[#00E5A0] bg-[#00E5A0]/5 text-white shadow-[0_0_15px_rgba(0,229,160,0.08)]'
+                      : 'border-[#1A1A1A] bg-[#111] text-[#CCCCCC] hover:border-[#2A2A2A] hover:bg-[#141414]'
                   }`}
                 >
-                  {opt.label}
+                  <span>{opt.label}</span>
+                  {monthlyIncome === String(opt.value) && (
+                    <div className="w-4 h-4 rounded-full bg-[#00E5A0] flex items-center justify-center flex-shrink-0">
+                      <svg width="8" height="6" viewBox="0 0 8 6" fill="none">
+                        <path d="M1 3L3 5L7 1" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </div>
+                  )}
                 </button>
               ))}
+              {/* Prefer not to say */}
+              <button
+                onClick={() => onIncomeChange('prefer_not')}
+                className={`w-full text-left px-5 py-4 rounded-xl border text-sm font-medium transition-all duration-200 flex items-center justify-between ${
+                  monthlyIncome === 'prefer_not'
+                    ? 'border-[#00E5A0] bg-[#00E5A0]/5 text-white shadow-[0_0_15px_rgba(0,229,160,0.08)]'
+                    : 'border-[#1A1A1A] bg-[#111] text-[#555] hover:border-[#2A2A2A] italic'
+                }`}
+              >
+                <span>{language === 'es' ? '🔒 Prefiero no decir' : '🔒 Prefer not to say'}</span>
+                {monthlyIncome === 'prefer_not' && (
+                  <div className="w-4 h-4 rounded-full bg-[#00E5A0] flex items-center justify-center flex-shrink-0">
+                    <svg width="8" height="6" viewBox="0 0 8 6" fill="none">
+                      <path d="M1 3L3 5L7 1" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </div>
+                )}
+              </button>
             </div>
           </motion.div>
         )}

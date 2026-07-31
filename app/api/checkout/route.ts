@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
       apiVersion: '2026-04-22.dahlia',
     })
-    const { plan, language } = await req.json() as { plan: string; language: string }
+    const { plan, language, profile } = await req.json() as { plan: string; language: string; profile?: string }
     const planData = PLANS[plan] ?? PLANS.starter
     const origin = req.headers.get('origin') ?? 'https://mojxai.vercel.app'
 
@@ -48,14 +48,18 @@ export async function POST(req: NextRequest) {
         },
       ],
       mode: 'payment',
-      success_url: `${origin}/success?plan=${plan}&lang=${language}`,
+      success_url: `${origin}/success?plan=${plan}&lang=${language}&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/diagnostico`,
       locale: language === 'es' ? 'es' : 'en',
+      allow_promotion_codes: true, // enables coupon/promo code field on checkout page
+      // Pass plan + profile so the webhook can send the right questionnaire
+      metadata: { plan, language, ...(profile ? { profile } : {}) },
     })
 
     return NextResponse.json({ url: session.url })
   } catch (err) {
-    console.error('Stripe error:', err)
-    return NextResponse.json({ error: 'Failed to create checkout session' }, { status: 500 })
+    const message = err instanceof Error ? err.message : String(err)
+    console.error('Stripe error:', message)
+    return NextResponse.json({ error: 'Failed to create checkout session', detail: message }, { status: 500 })
   }
 }

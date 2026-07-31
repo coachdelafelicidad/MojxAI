@@ -1,13 +1,39 @@
 import type { Metadata } from 'next'
 import './globals.css'
 
+const BASE_URL = 'https://mojxai.com'
+
 export const metadata: Metadata = {
-  title: 'MojxAI — Diagnóstico de IA',
-  description: 'Descubre cuánto tiempo y dinero estás perdiendo por no tener IA bien configurada. Diagnóstico gratuito en 5 minutos.',
+  title: 'MOJXAI — Tu sistema de IA personalizado en 48 horas',
+  description: 'No necesitas estudiar más. Nosotros entramos a tu cuenta, la configuramos con tus documentos y procesos reales, y te la dejamos lista en 48 horas. Diagnóstico gratuito.',
+  metadataBase: new URL(BASE_URL),
+  icons: {
+    icon: '/icon.svg',
+    shortcut: '/icon.svg',
+    apple: '/icon.svg',
+  },
   openGraph: {
-    title: 'MojxAI — Diagnóstico de IA',
-    description: 'Descubre cuánto estás perdiendo sin IA. Diagnóstico gratis en 5 minutos.',
-    siteName: 'MojxAI',
+    title: 'MOJXAI — Tu sistema de IA personalizado en 48 horas',
+    description: 'No estudias nada. Nosotros instalamos la IA con tus documentos y procesos reales. Listo en 48h. Garantía 100%.',
+    url: BASE_URL,
+    siteName: 'MOJXAI',
+    images: [
+      {
+        url: `${BASE_URL}/opengraph-image`,
+        width: 1200,
+        height: 630,
+        type: 'image/png',
+        alt: 'MOJXAI — Sistema de IA personalizado en 48 horas',
+      },
+    ],
+    locale: 'es_MX',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'MOJXAI — Tu sistema de IA en 48 horas',
+    description: 'No estudias nada. Instalamos la IA con tus procesos reales. Listo en 48h.',
+    images: [`${BASE_URL}/opengraph-image`],
   },
 }
 

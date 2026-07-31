@@ -47,7 +47,7 @@ export const translations = {
       consultant: {
         emoji: '🎯',
         title: 'Consultor / Coach',
-        subtitle: 'Programas, cursos y mentoría',
+        subtitle: 'Programas, mentoría y estrategia',
       },
       architect: {
         emoji: '📐',
@@ -109,7 +109,7 @@ export const translations = {
       {
         id: 'hogar',
         name: 'HOGAR',
-        price: '$180',
+        price: '$197',
         currency: 'USD',
         billing: 'pago único',
         desc: 'IA para tu hogar y familia',
@@ -216,7 +216,7 @@ export const translations = {
       consultant: {
         emoji: '🎯',
         title: 'Consultant / Coach',
-        subtitle: 'Programs, courses & mentoring',
+        subtitle: 'Programs, mentoring & strategy',
       },
       architect: {
         emoji: '📐',
@@ -278,7 +278,7 @@ export const translations = {
       {
         id: 'hogar',
         name: 'HOME',
-        price: '$180',
+        price: '$197',
         currency: 'USD',
         billing: 'one-time payment',
         desc: 'AI for your home & family',
