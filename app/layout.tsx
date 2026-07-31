@@ -4,8 +4,8 @@ import './globals.css'
 const BASE_URL = 'https://mojxai.com'
 
 export const metadata: Metadata = {
-  title: 'MOJXAI — Tu sistema de IA personalizado en 48 horas',
-  description: 'No necesitas estudiar más. Nosotros entramos a tu cuenta, la configuramos con tus documentos y procesos reales, y te la dejamos lista en 48 horas. Diagnóstico gratuito.',
+  title: 'MOJXAI — Arquitecto de Sistema de IA Personalizado en 48 horas',
+  description: 'No necesitas estudiar más. Nosotros entramos a tu cuenta, la configuramos con tus propias necesidades y procesos reales, y te la dejamos lista para sacar el máximo provecho a la IA en 48 horas.',
   metadataBase: new URL(BASE_URL),
   icons: {
     icon: '/icon.svg',
@@ -13,17 +13,17 @@ export const metadata: Metadata = {
     apple: '/icon.svg',
   },
   openGraph: {
-    title: 'MOJXAI — Tu sistema de IA personalizado en 48 horas',
-    description: 'No estudias nada. Nosotros instalamos la IA con tus documentos y procesos reales. Listo en 48h. Garantía 100%.',
+    title: 'MOJXAI — Arquitecto de Sistema de IA Personalizado en 48 horas',
+    description: 'No necesitas estudiar más. Instalamos la IA con tus procesos reales. Listo en 48h. Garantía 100%.',
     url: BASE_URL,
     siteName: 'MOJXAI',
     images: [
       {
-        url: `${BASE_URL}/opengraph-image`,
+        url: `${BASE_URL}/opengraph-image?v=2`,
         width: 1200,
         height: 630,
         type: 'image/png',
-        alt: 'MOJXAI — Sistema de IA personalizado en 48 horas',
+        alt: 'MOJXAI — Arquitecto de Sistema de IA Personalizado en 48 horas',
       },
     ],
     locale: 'es_MX',
@@ -31,9 +31,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'MOJXAI — Tu sistema de IA en 48 horas',
-    description: 'No estudias nada. Instalamos la IA con tus procesos reales. Listo en 48h.',
-    images: [`${BASE_URL}/opengraph-image`],
+    title: 'MOJXAI — Arquitecto de Sistema de IA Personalizado',
+    description: 'No necesitas estudiar más. Instalamos la IA con tus procesos reales. Listo en 48h.',
+    images: [`${BASE_URL}/opengraph-image?v=2`],
   },
 }
 
