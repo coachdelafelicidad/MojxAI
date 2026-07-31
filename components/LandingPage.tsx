@@ -323,7 +323,7 @@ export function LandingPage() {
         <div className="relative z-20 flex flex-col items-center w-full max-w-3xl">
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="mb-5">
             <span className="text-xs font-bold tracking-[0.3em] uppercase" style={{ color: G }}>
-              MOJXAI · Sistema de IA Personalizado
+              MOJXAI · Arquitecto de Sistema de IA Personalizado
             </span>
           </motion.div>
 
