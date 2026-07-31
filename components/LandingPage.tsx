@@ -254,12 +254,9 @@ export function LandingPage() {
         <div className="max-w-5xl mx-auto px-6 flex items-center justify-between h-16">
           <Link href="/" className="flex items-center gap-2.5 hover:opacity-80 transition-opacity">
             <LogoIcon size={28} />
-            <div className="flex flex-col leading-none">
-              <span className="font-display font-bold text-base tracking-tight">
-                <span className="text-white">Mo</span><span style={{ color: '#00E5A0' }}>j</span><span className="text-white">xAI</span>
-              </span>
-              <span className="text-[#555] text-[9px] font-semibold tracking-[0.25em] uppercase mt-0.5">Systems</span>
-            </div>
+            <span className="font-display font-bold text-base tracking-tight">
+              <span className="text-white">Mo</span><span style={{ color: '#00E5A0' }}>j</span><span className="text-white">xAI</span>
+            </span>
           </Link>
 
           <div className="hidden md:flex items-center gap-7">
@@ -800,7 +797,7 @@ export function LandingPage() {
                 <span className="font-display font-bold text-base tracking-tight">
                   <span className="text-white">Mo</span><span style={{ color: '#00E5A0' }}>j</span><span className="text-white">xAI</span>
                 </span>
-                <span className="text-[#333] text-[9px] font-semibold tracking-[0.25em] uppercase mt-0.5">Systems · mojxai.com · 2026</span>
+                <span className="text-[#333] text-[9px] font-semibold tracking-[0.25em] uppercase mt-0.5">mojxai.com · 2026</span>
               </div>
             </div>
             <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
