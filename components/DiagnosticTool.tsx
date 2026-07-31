@@ -7,13 +7,13 @@ import Link from 'next/link'
 function LogoIcon({ size = 24 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect x="11" y="19" width="7" height="62" rx="2" fill="#C8C8C8"/>
-      <rect x="11" y="19" width="19" height="7" rx="2" fill="#C8C8C8"/>
-      <rect x="11" y="74" width="19" height="7" rx="2" fill="#C8C8C8"/>
-      <rect x="46.5" y="25" width="7" height="50" rx="3.5" fill="#00E5A0"/>
-      <rect x="82" y="19" width="7" height="62" rx="2" fill="#C8C8C8"/>
-      <rect x="70" y="19" width="19" height="7" rx="2" fill="#C8C8C8"/>
-      <rect x="70" y="74" width="19" height="7" rx="2" fill="#C8C8C8"/>
+      <rect x="10" y="12" width="9" height="76" rx="2.5" fill="#C0C0C0"/>
+      <rect x="10" y="12" width="24" height="9" rx="2.5" fill="#C0C0C0"/>
+      <rect x="10" y="79" width="24" height="9" rx="2.5" fill="#C0C0C0"/>
+      <rect x="45.5" y="19" width="9" height="62" rx="4.5" fill="#00E5A0"/>
+      <rect x="81" y="12" width="9" height="76" rx="2.5" fill="#C0C0C0"/>
+      <rect x="66" y="12" width="24" height="9" rx="2.5" fill="#C0C0C0"/>
+      <rect x="66" y="79" width="24" height="9" rx="2.5" fill="#C0C0C0"/>
     </svg>
   )
 }
@@ -153,11 +153,8 @@ export function DiagnosticTool() {
           className="flex items-center gap-2 hover:opacity-70 transition-opacity duration-200"
         >
           <LogoIcon size={18} />
-          <span
-            className="font-display font-black text-white"
-            style={{ fontSize: '11px', letterSpacing: '0.2em' }}
-          >
-            MOJXAI
+          <span className="font-display font-black" style={{ fontSize: '11px', letterSpacing: '0.15em' }}>
+            <span className="text-white">Mo</span><span style={{ color: '#00E5A0' }}>j</span><span className="text-white">xAI</span>
           </span>
         </Link>
 

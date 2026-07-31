@@ -11,13 +11,13 @@ const G = '#00E5A0'
 function LogoIcon({ size = 28 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect x="11" y="19" width="7" height="62" rx="2" fill="#C8C8C8"/>
-      <rect x="11" y="19" width="19" height="7" rx="2" fill="#C8C8C8"/>
-      <rect x="11" y="74" width="19" height="7" rx="2" fill="#C8C8C8"/>
-      <rect x="46.5" y="25" width="7" height="50" rx="3.5" fill="#00E5A0"/>
-      <rect x="82" y="19" width="7" height="62" rx="2" fill="#C8C8C8"/>
-      <rect x="70" y="19" width="19" height="7" rx="2" fill="#C8C8C8"/>
-      <rect x="70" y="74" width="19" height="7" rx="2" fill="#C8C8C8"/>
+      <rect x="10" y="12" width="9" height="76" rx="2.5" fill="#C0C0C0"/>
+      <rect x="10" y="12" width="24" height="9" rx="2.5" fill="#C0C0C0"/>
+      <rect x="10" y="79" width="24" height="9" rx="2.5" fill="#C0C0C0"/>
+      <rect x="45.5" y="19" width="9" height="62" rx="4.5" fill="#00E5A0"/>
+      <rect x="81" y="12" width="9" height="76" rx="2.5" fill="#C0C0C0"/>
+      <rect x="66" y="12" width="24" height="9" rx="2.5" fill="#C0C0C0"/>
+      <rect x="66" y="79" width="24" height="9" rx="2.5" fill="#C0C0C0"/>
     </svg>
   )
 }
@@ -255,7 +255,9 @@ export function LandingPage() {
           <Link href="/" className="flex items-center gap-2.5 hover:opacity-80 transition-opacity">
             <LogoIcon size={28} />
             <div className="flex flex-col leading-none">
-              <span className="font-display font-bold text-base text-white tracking-tight">MojxAI</span>
+              <span className="font-display font-bold text-base tracking-tight">
+                <span className="text-white">Mo</span><span style={{ color: '#00E5A0' }}>j</span><span className="text-white">xAI</span>
+              </span>
               <span className="text-[#555] text-[9px] font-semibold tracking-[0.25em] uppercase mt-0.5">Systems</span>
             </div>
           </Link>
@@ -795,7 +797,9 @@ export function LandingPage() {
             <div className="flex items-center gap-2.5">
               <LogoIcon size={24} />
               <div className="flex flex-col leading-none">
-                <span className="font-display font-bold text-base text-white tracking-tight">MojxAI</span>
+                <span className="font-display font-bold text-base tracking-tight">
+                  <span className="text-white">Mo</span><span style={{ color: '#00E5A0' }}>j</span><span className="text-white">xAI</span>
+                </span>
                 <span className="text-[#333] text-[9px] font-semibold tracking-[0.25em] uppercase mt-0.5">Systems · mojxai.com · 2026</span>
               </div>
             </div>
