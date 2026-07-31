@@ -13,7 +13,7 @@ export function HeroScreen({ language, onStart }: HeroScreenProps) {
   const tr = t(language)
 
   return (
-    <div className="relative flex flex-col items-center justify-center min-h-screen px-6 text-center overflow-hidden">
+    <div className="relative flex flex-col items-center justify-center min-h-screen px-6 pt-14 text-center overflow-hidden">
       {/* Background video */}
       <video
         autoPlay muted loop playsInline
