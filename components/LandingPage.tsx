@@ -620,12 +620,12 @@ export function LandingPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-12">
             {[
               {
-                org: 'OIG', role: 'Osorno Impact Group',
+                org: 'GO', role: 'Grupo de Operaciones Múltiples',
                 text: '10 unidades de negocio distintas automatizadas en menos de 48 horas. Sistema funcionando sin intervención técnica desde el día 1.',
                 tags: ['10 unidades', '< 48 horas'],
               },
               {
-                org: 'CM', role: 'Consorcio Mius',
+                org: 'CF', role: 'Consorcio Financiero y Corporativo',
                 text: 'Departamento financiero con asistentes personalizados para contratos, reportes y comunicaciones. Reducción del 65% en tiempo operativo.',
                 tags: ['Finanzas', '65% menos tiempo'],
               },
