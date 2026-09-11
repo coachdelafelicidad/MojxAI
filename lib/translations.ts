@@ -63,6 +63,12 @@ export const translations = {
     continueButton: 'Continuar',
     backButton: 'Atrás',
     homeButton: 'Volver al inicio',
+    customProfessionPlaceholder: 'Escribe tu profesión o actividad',
+    customProfessionMatch: (title: string) => `Usaremos la categoría “${title}”`,
+    fallbackTasksLabel: '¿Qué tareas son las que más tiempo te quitan a la semana?',
+    fallbackTasksPlaceholder: 'Ej. Responder los mismos correos de clientes, armar reportes, buscar información dispersa...',
+    fallbackHoursLabel: '¿Cuántas horas a la semana le dedicas aprox.?',
+    fallbackHoursPlaceholder: 'Ej. 8',
 
     // Tasks
     tasksTitle: 'Marca todo lo que haces actualmente de forma manual',
@@ -232,6 +238,12 @@ export const translations = {
     continueButton: 'Continue',
     backButton: 'Back',
     homeButton: 'Back to home',
+    customProfessionPlaceholder: 'Type your profession or activity',
+    customProfessionMatch: (title: string) => `We'll use the “${title}” category`,
+    fallbackTasksLabel: 'Which tasks take up the most time in your week?',
+    fallbackTasksPlaceholder: 'E.g. Answering the same client emails, putting reports together, searching scattered information...',
+    fallbackHoursLabel: 'About how many hours a week do you spend on this?',
+    fallbackHoursPlaceholder: 'E.g. 8',
 
     // Tasks
     tasksTitle: 'Check everything you currently do manually',

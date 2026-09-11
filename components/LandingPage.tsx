@@ -63,12 +63,30 @@ function FaqItem({ q, a }: { q: string; a: string }) {
 
 function SeatCalculator() {
   const [seats, setSeats] = useState(3)
+  const [loading, setLoading] = useState(false)
   const MIN = 3
   const PRICE_PER_SEAT = 397
-  const total = Math.max(seats, MIN) * PRICE_PER_SEAT
+  const effectiveSeats = Math.max(seats, MIN)
+
+  async function handleCheckout() {
+    setLoading(true)
+    try {
+      const res = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ plan: 'business', language: 'es', seats: effectiveSeats }),
+      })
+      const data = await res.json()
+      if (data.url) window.location.href = data.url
+    } catch {
+      window.location.href = `mailto:hola@mojxai.com?subject=${encodeURIComponent(`MOJXAI Teams — ${effectiveSeats} seats`)}`
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
-    <div className="rounded-2xl border border-[#1F1F1F] bg-[#121212]/80 backdrop-blur-md p-7 mt-6">
+    <div id="seat-calc" className="rounded-2xl border border-[#1F1F1F] bg-[#121212]/80 backdrop-blur-md p-7 mt-6">
       <p className="text-xs font-bold uppercase tracking-widest mb-4" style={{ color: G }}>
         Calculadora para Equipos
       </p>
@@ -103,28 +121,74 @@ function SeatCalculator() {
         </div>
         <div className="text-right">
           <p className="font-display font-bold text-3xl text-white">
-            ${(Math.max(seats, MIN) * PRICE_PER_SEAT).toLocaleString()}
+            ${(effectiveSeats * PRICE_PER_SEAT).toLocaleString()}
           </p>
-          <p className="text-[#555] text-xs">${PRICE_PER_SEAT} USD × {Math.max(seats, MIN)} seats</p>
+          <p className="text-[#555] text-xs">${PRICE_PER_SEAT} USD × {effectiveSeats} seats</p>
         </div>
       </div>
 
-      <a
-        href={`mailto:hola@mojxai.com?subject=${encodeURIComponent(`MOJXAI Teams — ${Math.max(seats, MIN)} seats`)}&body=${encodeURIComponent(`Hola, quiero el Sistema Operativo MOJXAI para ${Math.max(seats, MIN)} seats. Total estimado: $${total.toLocaleString()} USD.`)}`}
-        target="_blank" rel="noopener noreferrer"
-        className="block text-center font-display font-bold py-4 rounded-full text-sm transition-all hover:scale-[1.02] hover:shadow-[0_0_24px_rgba(0,229,160,0.3)]"
+      <button
+        onClick={handleCheckout}
+        disabled={loading}
+        className="w-full text-center font-display font-bold py-4 rounded-full text-sm transition-all hover:scale-[1.02] hover:shadow-[0_0_24px_rgba(0,229,160,0.3)] disabled:opacity-60 disabled:cursor-wait"
         style={{ background: G, color: 'black' }}
       >
-        Quiero que me lo instalen → ({Math.max(seats, MIN)} seats)
-      </a>
+        {loading ? 'Redirigiendo…' : `Contratar ${effectiveSeats} seats →`}
+      </button>
+      <p className="text-[#444] text-[10px] text-center mt-3 leading-relaxed">
+        Después de tu pago recibirás un cuestionario personalizado por correo en minutos — así configuramos tu sistema con tu contexto real.
+      </p>
     </div>
   )
 }
+
+// ── Entregable data ────────────────────────────────────────────────────────
+const DELIVERABLES = [
+  { icon: '📁', title: 'Tus Projects personalizados', desc: 'Uno por cada tarea que elegiste, con nombre y función específica — no uno genérico.' },
+  { icon: '🧬', title: 'Tu ADN de negocio adentro', desc: 'Tus documentos, tu tono, tus procesos reales cargados dentro de cada Project.' },
+  { icon: '📖', title: 'Manual de uso', desc: 'Los comandos exactos para cada Project, con ejemplos reales. Lo abres y ya sabes qué escribir.' },
+  { icon: '🛡️', title: 'Soporte con dos capas', desc: '30 días de correo directo con el equipo, más tu Gem de soporte con IA disponible siempre.' },
+  { icon: '🔐', title: 'Todo dentro de TU cuenta', desc: 'No es una plataforma nueva que aprender. Es tu Claude o ChatGPT, configurado para ti.' },
+]
+
+const BEFORE_AFTER = [
+  {
+    id: 'lawyer',
+    label: 'Abogado',
+    before: 'Le preguntas a ChatGPT "ayúdame con un contrato" y pasas horas corrigiendo lo que te devuelve.',
+    after: 'Project "Contratos & Redacción" — conoce tus cláusulas, tu estilo y tus clientes. Comando: "Redacta contrato de arrendamiento: [partes y condiciones]" → sale con tu formato.',
+  },
+  {
+    id: 'doctor',
+    label: 'Médico',
+    before: 'Escribes cada nota clínica desde cero, perdiendo tiempo en formato en vez de en el paciente.',
+    after: 'Project "Notas Clínicas" — formato SOAP con tu terminología de especialidad. Comando: "Nota de consulta: [síntomas y diagnóstico]" → nota lista en segundos.',
+  },
+  {
+    id: 'accountant',
+    label: 'Contador',
+    before: 'Cada reporte financiero es armar todo manual en Excel, cliente por cliente.',
+    after: 'Project "Reportes Financieros" — conoce tu estructura y tus clientes activos. Comando: "Estado de resultados de [cliente]: [datos]" → listo para enviar.',
+  },
+  {
+    id: 'consultant',
+    label: 'Coach / Consultor',
+    before: 'Preparas cada sesión desde cero, sin sistema para dar seguimiento entre clientes.',
+    after: 'Project "Preparación de Sesiones" — conoce tu metodología y el historial de cada cliente. Comando: "Prepara sesión con [cliente]: [último avance]" → preguntas listas.',
+  },
+  {
+    id: 'business',
+    label: 'Dueño de empresa',
+    before: 'Cada persona de tu equipo usa la IA distinto — resultados inconsistentes, sin estándar.',
+    after: 'Projects por rol (Ventas, Marketing, Operaciones) — todos con el mismo ADN de tu empresa. Un estándar, no siete estilos distintos.',
+  },
+]
 
 // ── Main Component ─────────────────────────────────────────────────────────
 export function LandingPage() {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [activeTab, setActiveTab] = useState('lawyer')
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40)
@@ -485,6 +549,96 @@ export function LandingPage() {
         </div>
       </section>
 
+      {/* ══ S4.5: ENTREGABLE ══ */}
+      <section className="px-6 py-24 bg-[#030303]">
+        <div className="max-w-5xl mx-auto">
+
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-16">
+            <span className="text-xs font-bold tracking-widest uppercase mb-3 block" style={{ color: G }}>Entregable</span>
+            <h2 className="font-display font-bold text-2xl sm:text-3xl md:text-4xl mb-4">
+              Esto es exactamente lo que recibes
+            </h2>
+            <p className="text-[#555] text-base max-w-lg mx-auto">
+              No es una promesa abstracta. Es lo que aparece en tu cuenta el día de la entrega.
+            </p>
+          </motion.div>
+
+          {/* Block 1: 5 deliverable cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-20">
+            {DELIVERABLES.map((d, i) => (
+              <motion.div key={i}
+                initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
+                className="bg-[#121212]/80 backdrop-blur-xl border border-[#1F1F1F] rounded-2xl p-5 flex flex-col gap-3 hover:border-[#00E5A0]/20 hover:shadow-[0_0_20px_rgba(0,229,160,0.04)] transition-all duration-300"
+              >
+                <div className="w-9 h-9 rounded-xl flex items-center justify-center text-lg" style={{ background: `${G}12` }}>
+                  {d.icon}
+                </div>
+                <p className="font-display font-bold text-sm text-white leading-snug">{d.title}</p>
+                <p className="text-[#555] text-xs leading-relaxed">{d.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Block 2: Before/After tabs */}
+          <div className="mb-20">
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-10">
+              <h3 className="font-display font-bold text-xl sm:text-2xl md:text-3xl">
+                Así se ve el cambio,{' '}
+                <span style={{ color: G }}>según tu perfil</span>
+              </h3>
+            </motion.div>
+
+            <div className="flex flex-wrap justify-center gap-2 mb-8">
+              {BEFORE_AFTER.map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className="px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider border transition-all duration-200"
+                  style={activeTab === tab.id
+                    ? { background: G, color: 'black', borderColor: 'transparent' }
+                    : { color: '#555', borderColor: '#1F1F1F' }}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+
+            <AnimatePresence mode="wait">
+              {BEFORE_AFTER.map((tab) => activeTab === tab.id && (
+                <motion.div key={tab.id}
+                  initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.22, ease: [0.4, 0, 0.2, 1] }}
+                  className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-3xl mx-auto"
+                >
+                  <div className="bg-[#111]/80 border border-[#1A1A1A] rounded-2xl p-6">
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-[#444] mb-4">❌ Antes</p>
+                    <p className="text-[#666] text-sm leading-relaxed">{tab.before}</p>
+                  </div>
+                  <div className="rounded-2xl p-6"
+                    style={{ background: '#061410', border: `1px solid ${G}40`, boxShadow: `0 0 24px rgba(0,229,160,0.06)` }}>
+                    <p className="text-[10px] font-bold uppercase tracking-widest mb-4" style={{ color: G }}>✅ Después</p>
+                    <p className="text-[#CCCCCC] text-sm leading-relaxed">{tab.after}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
+
+          {/* Block 3: Closing */}
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center">
+            <p className="font-display font-bold text-2xl sm:text-3xl md:text-4xl mb-8 bg-gradient-to-r from-white via-[#00E5A0] to-white bg-clip-text text-transparent">
+              No aprendes a usar IA.<br />La IA ya aprendió tu negocio.
+            </p>
+            <Link href="/diagnostico"
+              className="inline-flex items-center gap-2 font-display font-bold px-8 py-4 rounded-full text-black text-base transition-all hover:scale-105 hover:shadow-[0_0_32px_rgba(0,229,160,0.35)]"
+              style={{ background: G }}>
+              Ver mi sistema personalizado →
+            </Link>
+          </motion.div>
+
+        </div>
+      </section>
+
       {/* ══ S5: PRECIOS ══ */}
       <section id="precios" className="px-6 py-24">
         <div className="max-w-5xl mx-auto">
@@ -539,6 +693,9 @@ export function LandingPage() {
                 style={{ background: G, color: 'black' }}>
                 Contratar Hogar →
               </a>
+              <p className="text-[#444] text-[10px] text-center mt-3 leading-relaxed">
+                Después de tu pago recibirás un cuestionario personalizado por correo en minutos — así configuramos tu sistema con tu contexto real.
+              </p>
             </motion.div>
 
             {/* Card 3: Individuos — Featured */}
@@ -569,6 +726,9 @@ export function LandingPage() {
                 style={{ background: G, color: 'black' }}>
                 Quiero que me lo instalen →
               </a>
+              <p className="text-[#444] text-[10px] text-center mt-3 leading-relaxed">
+                Después de tu pago recibirás un cuestionario personalizado por correo en minutos — así configuramos tu sistema con tu contexto real.
+              </p>
             </motion.div>
 
             {/* Card 4: Equipos */}
@@ -588,10 +748,14 @@ export function LandingPage() {
                   <li key={f} className="flex items-start gap-2 text-xs text-[#CCCCCC]"><CheckIcon />{f}</li>
                 ))}
               </ul>
-              <a href="mailto:hola@mojxai.com?subject=MOJXAI%20Equipos&body=Hola%2C%20quiero%20el%20sistema%20para%20mi%20equipo."
-                className="block text-center font-bold py-3 rounded-full text-sm border border-[#2A2A2A] text-[#CCCCCC] transition-all hover:border-[#00E5A0] hover:text-[#00E5A0]">
-                Cotizar para mi equipo →
-              </a>
+              <button
+                onClick={() => document.getElementById('seat-calc')?.scrollIntoView({ behavior: 'smooth', block: 'center' })}
+                className="w-full block text-center font-bold py-3 rounded-full text-sm border border-[#2A2A2A] text-[#CCCCCC] transition-all hover:border-[#00E5A0] hover:text-[#00E5A0]">
+                Calcular mi total →
+              </button>
+              <p className="text-[#444] text-[10px] text-center mt-3 leading-relaxed">
+                Después de tu pago recibirás un cuestionario personalizado por correo en minutos — así configuramos tu sistema con tu contexto real.
+              </p>
             </motion.div>
 
           </div>
@@ -601,8 +765,20 @@ export function LandingPage() {
             <SeatCalculator />
           </motion.div>
 
+          <motion.div initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mt-8 mb-4 bg-[#0A0A0A] border border-[#1A1A1A] rounded-xl px-5 py-4 text-center max-w-2xl mx-auto">
+            <p className="text-[#555] text-xs leading-relaxed">
+              🔒 Antes de tocar tu cuenta, firmamos un acuerdo de confidencialidad. Tu información no sale de tu entorno. Al terminar, eliminamos el acceso — el sistema queda 100% tuyo.
+            </p>
+            <p className="text-[#444] text-xs mt-2">
+              ¿Preguntas? Escríbenos directo:{' '}
+              <a href="mailto:hola@mojxai.com" className="hover:text-[#888] transition-colors" style={{ color: G }}>hola@mojxai.com</a>
+              {' '}·{' '}
+              <a href="https://wa.me/528145912034" target="_blank" rel="noopener noreferrer" className="hover:text-[#888] transition-colors" style={{ color: G }}>WhatsApp +52 81 4591 2034</a>
+            </p>
+          </motion.div>
+
           <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
-            className="text-center text-[#333] text-xs mt-8 max-w-md mx-auto leading-relaxed">
+            className="text-center text-[#333] text-xs mt-4 max-w-md mx-auto leading-relaxed">
             MOJXAI configura el sistema. La licencia de Claude Pro cuesta $20 USD/mes por usuario — directamente con Anthropic. Sin costos ocultos.
           </motion.p>
         </div>
@@ -619,11 +795,13 @@ export function LandingPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-12">
             {[
               {
+                /* TODO: reemplazar con nombre real una vez autorizado por el cliente */
                 org: 'GO', role: 'Grupo de Operaciones Múltiples',
                 text: '10 unidades de negocio distintas automatizadas en menos de 48 horas. Sistema funcionando sin intervención técnica desde el día 1.',
                 tags: ['10 unidades', '< 48 horas'],
               },
               {
+                /* TODO: reemplazar con nombre real una vez autorizado por el cliente */
                 org: 'CF', role: 'Consorcio Financiero y Corporativo',
                 text: 'Departamento financiero con asistentes personalizados para contratos, reportes y comunicaciones. Reducción del 65% en tiempo operativo.',
                 tags: ['Finanzas', '65% menos tiempo'],
@@ -806,13 +984,21 @@ export function LandingPage() {
               <button onClick={() => scrollTo('precios')} className="text-[#444] text-sm hover:text-white transition-colors">Precios</button>
               <a href="mailto:hola@mojxai.com" className="text-[#444] text-sm hover:text-white transition-colors">Contacto</a>
             </div>
-            <a href="mailto:hola@mojxai.com"
-              className="w-9 h-9 rounded-full border border-[#1A1A1A] flex items-center justify-center text-[#444] hover:border-[#2A2A2A] hover:text-white transition-all">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="2" y="4" width="20" height="16" rx="2"/>
-                <path d="M2 7l10 7 10-7"/>
-              </svg>
-            </a>
+            <div className="flex items-center gap-2">
+              <a href="mailto:hola@mojxai.com"
+                className="w-9 h-9 rounded-full border border-[#1A1A1A] flex items-center justify-center text-[#444] hover:border-[#2A2A2A] hover:text-white transition-all">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="2" y="4" width="20" height="16" rx="2"/>
+                  <path d="M2 7l10 7 10-7"/>
+                </svg>
+              </a>
+              <a href="https://wa.me/528145912034" target="_blank" rel="noopener noreferrer"
+                className="w-9 h-9 rounded-full border border-[#1A1A1A] flex items-center justify-center text-[#444] hover:border-[#2A2A2A] hover:text-white transition-all">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+                </svg>
+              </a>
+            </div>
           </div>
           <div className="border-t border-[#0D0D0D] pt-6 text-center">
             <p className="text-[#222] text-xs">© 2026 MOJXAI · Osorno Impact Group · Todos los derechos reservados</p>

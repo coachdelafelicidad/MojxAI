@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Language, Profile } from '@/lib/types'
 import { getTasksForProfile } from '@/lib/tasks'
 import { t } from '@/lib/translations'
+import { TaskIcon } from '@/lib/icons'
 
 interface TasksScreenProps {
   language: Language
@@ -112,7 +113,7 @@ export function TasksScreen({ language, profile, selectedTasks, onToggleTask, on
               >
                 <button
                   onClick={() => handleToggle(task.id)}
-                  className={`w-full text-left px-4 py-4 rounded-xl border transition-all duration-200 flex items-center gap-3 ${
+                  className={`group w-full text-left px-4 py-4 rounded-xl border transition-all duration-200 flex items-center gap-3 ${
                     isSelected
                       ? 'border-[#00E5A0] bg-[#00E5A0]/5 shadow-[0_0_20px_rgba(0,229,160,0.08)]'
                       : isDisabled
@@ -120,7 +121,18 @@ export function TasksScreen({ language, profile, selectedTasks, onToggleTask, on
                         : 'border-[#1A1A1A] bg-[#111] hover:border-[#2A2A2A] hover:bg-[#141414]'
                   }`}
                 >
-                  <span className="text-xl flex-shrink-0">{task.emoji}</span>
+                  <span className="w-5 h-5 flex items-center justify-center flex-shrink-0">
+                    <TaskIcon
+                      id={task.id}
+                      className={`transition-colors ${
+                        isSelected
+                          ? 'text-[#00E5A0]'
+                          : isDisabled
+                            ? 'text-[#555]'
+                            : 'text-[#555] group-hover:text-[#00E5A0]'
+                      }`}
+                    />
+                  </span>
                   <span className={`text-sm font-medium flex-1 leading-snug ${isSelected ? 'text-white' : 'text-[#CCCCCC]'}`}>
                     {label}
                   </span>

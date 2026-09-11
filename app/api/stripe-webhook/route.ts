@@ -6,7 +6,7 @@ import type { EmailPlan, EmailLang, EmailProfile } from '@/lib/email-templates'
 
 export const dynamic = 'force-dynamic'
 
-const ADMIN_EMAIL = 'mojxai.app@gmail.com'
+const ADMIN_EMAIL = 'hola@mojxai.com'
 
 export async function POST(req: NextRequest) {
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {

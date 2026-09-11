@@ -7,7 +7,7 @@ const PLANS: Record<string, { name_es: string; name_en: string; amount: number }
   hogar: {
     name_es: 'MojxAI HOGAR — IA para tu hogar y familia',
     name_en: 'MojxAI HOME — AI for your home & family',
-    amount: 18000, // $180 USD in cents
+    amount: 19700, // $197 USD in cents
   },
   starter: {
     name_es: 'MojxAI STARTER — Sistema de IA para profesionistas',
@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
       apiVersion: '2026-04-22.dahlia',
     })
-    const { plan, language, profile } = await req.json() as { plan: string; language: string; profile?: string }
+    const { plan, language, profile, seats } = await req.json() as { plan: string; language: string; profile?: string; seats?: number }
     const planData = PLANS[plan] ?? PLANS.starter
     const origin = req.headers.get('origin') ?? 'https://mojxai.vercel.app'
 
@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
             },
             unit_amount: planData.amount,
           },
-          quantity: 1,
+          quantity: plan === 'business' ? Math.max(3, Number(seats) || 3) : 1,
         },
       ],
       mode: 'payment',

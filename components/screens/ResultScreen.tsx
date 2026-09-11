@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Language, CalculationResult, Profile, isHomeProfile } from '@/lib/types'
 import { formatMoney, getResultMessage } from '@/lib/calculations'
 import { t } from '@/lib/translations'
+import { TaskIcon } from '@/lib/icons'
 
 // ── Módulos de infraestructura — datos enriquecidos ───────────────────────
 const ASSISTANT_MODULES = [
@@ -401,7 +402,9 @@ export function ResultScreen({ language, profile, result, onShare, onBack, onRes
                   initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5 + i * 0.03 }}
                   className="flex items-center gap-3 py-2.5 first:pt-0 last:pb-0"
                 >
-                  <span className="text-base flex-shrink-0">{task.emoji}</span>
+                  <span className="w-5 h-5 flex items-center justify-center flex-shrink-0">
+                    <TaskIcon id={task.id} className="text-[#555]" />
+                  </span>
                   <span className="text-xs text-[#999] flex-1 leading-snug">{language === 'es' ? task.nameEs : task.nameEn}</span>
                   <div className="flex items-center gap-0.5 flex-shrink-0">
                     <span className="text-[#00E5A0] text-xs font-bold font-display">{task.hoursPerWeek}h</span>

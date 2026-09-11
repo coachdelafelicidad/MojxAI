@@ -371,7 +371,7 @@ const PROFILE_QUESTIONS: Record<EmailProfile, { es: Question[]; en: Question[] }
 // ─── Plan display config ───────────────────────────────────────────────────────
 
 const PLAN_LABELS: Record<EmailPlan, { es: string; en: string }> = {
-  hogar:    { es: 'MojxAI HOGAR — $180 USD',          en: 'MojxAI HOME — $180 USD' },
+  hogar:    { es: 'MojxAI HOGAR — $197 USD',          en: 'MojxAI HOME — $197 USD' },
   starter:  { es: 'MojxAI STARTER — $497 USD',        en: 'MojxAI STARTER — $497 USD' },
   business: { es: 'MojxAI FULL BUSINESS — $397/seat', en: 'MojxAI FULL BUSINESS — $397/seat' },
 }

@@ -19,7 +19,7 @@ const PROFILE_NAMES: Record<string, string> = {
 }
 
 const PLAN_NAMES: Record<string, string> = {
-  hogar:    'MojxAI HOGAR — $180 USD',
+  hogar:    'MojxAI HOGAR — $197 USD',
   starter:  'MojxAI STARTER — $497 USD',
   business: 'MojxAI FULL BUSINESS — $397/seat',
 }
@@ -77,7 +77,7 @@ function SuccessContent() {
     '¿Cuáles son los siguientes pasos?',
   ].join('\n')
 
-  const mailtoHref = `mailto:mojxai.app@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+  const mailtoHref = `mailto:hola@mojxai.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
 
   return (
     <div className="min-h-screen bg-[#0A0A0A] flex flex-col items-center justify-center px-6 text-center">
