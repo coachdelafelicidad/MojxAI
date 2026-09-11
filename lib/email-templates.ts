@@ -617,3 +617,67 @@ export function buildAdminNotificationEmail(opts: {
 
   return { subject, html }
 }
+
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+}
+
+export function buildCustomLeadEmail(opts: {
+  name: string
+  whatsapp: string
+  email: string
+  profession: string
+  tasksNote: string
+  lostHours: string
+  hoursRecoverable: number
+  moneyLostPerMonth: number
+  language: EmailLang
+}): { subject: string; html: string } {
+  const name = escapeHtml(opts.name)
+  const whatsapp = escapeHtml(opts.whatsapp)
+  const email = escapeHtml(opts.email)
+  const profession = escapeHtml(opts.profession)
+  const tasksNote = escapeHtml(opts.tasksNote).replace(/\n/g, '<br/>')
+  const lostHours = escapeHtml(opts.lostHours)
+  const waDigits = opts.whatsapp.replace(/\D/g, '')
+  const waLink = waDigits
+    ? `https://wa.me/${waDigits.startsWith('52') ? waDigits : `52${waDigits}`}`
+    : ''
+
+  const subject = `Consulta MojxAI — Mi perfil no está en la lista (${opts.profession || 'sin profesión'})`
+
+  const html = `<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"/></head>
+<body style="margin:0;padding:32px 16px;background:#0A0A0A;font-family:Arial,sans-serif;">
+  <table width="100%" style="max-width:500px;margin:0 auto;" cellpadding="0" cellspacing="0">
+    <tr>
+      <td align="center" style="padding-bottom:24px;">
+        <p style="margin:0;font-weight:700;font-size:13px;letter-spacing:0.2em;text-transform:uppercase;color:#00E5A0;">MojxAI · Lead</p>
+      </td>
+    </tr>
+    <tr>
+      <td style="background:#141414;border:1px solid #1E1E1E;border-radius:16px;padding:28px;">
+        <h2 style="margin:0 0 20px;font-size:20px;color:#FFFFFF;">Perfil no listado</h2>
+        <p style="margin:0 0 16px;color:#888;font-size:13px;">Idioma: ${opts.language}</p>
+        <table width="100%" cellpadding="0" cellspacing="0">
+          <tr><td style="padding:10px 0;border-bottom:1px solid #1E1E1E;"><span style="color:#555;font-size:12px;text-transform:uppercase;letter-spacing:0.1em;">Nombre</span><br/><span style="color:#CCC;font-size:14px;">${name}</span></td></tr>
+          <tr><td style="padding:10px 0;border-bottom:1px solid #1E1E1E;"><span style="color:#555;font-size:12px;text-transform:uppercase;letter-spacing:0.1em;">WhatsApp</span><br/>${waLink ? `<a href="${waLink}" style="color:#00E5A0;font-size:14px;text-decoration:none;">${whatsapp}</a>` : `<span style="color:#CCC;font-size:14px;">${whatsapp}</span>`}</td></tr>
+          <tr><td style="padding:10px 0;border-bottom:1px solid #1E1E1E;"><span style="color:#555;font-size:12px;text-transform:uppercase;letter-spacing:0.1em;">Correo</span><br/><span style="color:#CCC;font-size:14px;">${email || '—'}</span></td></tr>
+          <tr><td style="padding:10px 0;border-bottom:1px solid #1E1E1E;"><span style="color:#555;font-size:12px;text-transform:uppercase;letter-spacing:0.1em;">Profesión</span><br/><span style="color:#CCC;font-size:14px;">${profession}</span></td></tr>
+          <tr><td style="padding:10px 0;border-bottom:1px solid #1E1E1E;"><span style="color:#555;font-size:12px;text-transform:uppercase;letter-spacing:0.1em;">Tareas manuales</span><br/><span style="color:#CCC;font-size:14px;">${tasksNote || '—'}</span></td></tr>
+          <tr><td style="padding:10px 0;border-bottom:1px solid #1E1E1E;"><span style="color:#555;font-size:12px;text-transform:uppercase;letter-spacing:0.1em;">Horas en esas tareas</span><br/><span style="color:#CCC;font-size:14px;">${lostHours}</span></td></tr>
+          <tr><td style="padding:10px 0;"><span style="color:#555;font-size:12px;text-transform:uppercase;letter-spacing:0.1em;">Diagnóstico</span><br/><span style="color:#00E5A0;font-size:14px;">${opts.hoursRecoverable}h recuperables / sem · $${opts.moneyLostPerMonth.toLocaleString()} / mes</span></td></tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`
+
+  return { subject, html }
+}

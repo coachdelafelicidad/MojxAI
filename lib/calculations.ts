@@ -35,19 +35,31 @@ export function getCurrencySymbol(language: Language): string {
   return language === 'es' ? 'MXN' : 'USD'
 }
 
+export function hoursLostFromCatalog(selectedTaskIds: string[]): number {
+  return selectedTaskIds
+    .map(id => TASKS.find(t => t.id === id))
+    .filter((t): t is NonNullable<typeof t> => t !== undefined)
+    .reduce((sum, t) => sum + t.hoursPerWeek, 0)
+}
+
+export function midpointHours(option: string): number {
+  return HOURS_MAP[option as HoursOption] ?? 40
+}
+
 export function calculate(
   selectedTaskIds: string[],
   hoursPerWeek: string,
   monthlyIncomeValue: number,
   language: Language,
-  profile?: Profile | null
+  profile?: Profile | null,
+  hoursLostPerWeek?: number,
 ): CalculationResult {
   const selectedTasks = selectedTaskIds
     .map(id => TASKS.find(t => t.id === id))
     .filter((t): t is NonNullable<typeof t> => t !== undefined)
 
-  const hoursLostPerWeek = selectedTasks.reduce((sum, t) => sum + t.hoursPerWeek, 0)
-  const hoursRecoverable = Math.round(hoursLostPerWeek * 0.7)
+  const lostHours = hoursLostPerWeek ?? hoursLostFromCatalog(selectedTaskIds)
+  const hoursRecoverable = Math.round(lostHours * 0.7)
 
   let incomePerHour: number
   let moneyLostPerMonth: number
@@ -66,7 +78,7 @@ export function calculate(
   const allTasks = [...selectedTasks].sort((a, b) => b.hoursPerWeek - a.hoursPerWeek)
 
   return {
-    hoursLostPerWeek,
+    hoursLostPerWeek: lostHours,
     hoursRecoverable,
     incomePerHour,
     moneyLostPerMonth,

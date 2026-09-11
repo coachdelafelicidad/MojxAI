@@ -6,6 +6,7 @@ import { Language, CalculationResult, Profile, isHomeProfile } from '@/lib/types
 import { formatMoney, getResultMessage } from '@/lib/calculations'
 import { t } from '@/lib/translations'
 import { TaskIcon } from '@/lib/icons'
+import { CustomLeadForm, CustomLeadPayload } from '@/components/CustomLeadForm'
 
 // ── Módulos de infraestructura — datos enriquecidos ───────────────────────
 const ASSISTANT_MODULES = [
@@ -191,6 +192,7 @@ interface ResultScreenProps {
   language: Language
   profile: Profile | null
   result: CalculationResult
+  customLead: CustomLeadPayload | null
   onShare: () => void
   onBack: () => void
   onRestart: () => void
@@ -265,7 +267,7 @@ function FaqItem({ q, a }: { q: string; a: string }) {
   )
 }
 
-export function ResultScreen({ language, profile, result, onShare, onBack, onRestart }: ResultScreenProps) {
+export function ResultScreen({ language, profile, result, customLead, onShare, onBack, onRestart }: ResultScreenProps) {
   const tr = t(language)
   const isHome = isHomeProfile(profile)
   const hoursCount = useCounter(result.hoursRecoverable)
@@ -388,6 +390,9 @@ export function ResultScreen({ language, profile, result, onShare, onBack, onRes
         </motion.div>
 
         {/* ── Tasks list compacto ── */}
+        {customLead && (
+          <CustomLeadForm language={language} payload={customLead} />
+        )}
         {result.allTasks.length > 0 && (
           <motion.div
             initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}

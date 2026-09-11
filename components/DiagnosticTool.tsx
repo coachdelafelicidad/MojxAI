@@ -18,7 +18,7 @@ function LogoIcon({ size = 24 }: { size?: number }) {
   )
 }
 import { Language, Profile, DiagnosticState, isHomeProfile } from '@/lib/types'
-import { calculate, getIncomeOptions } from '@/lib/calculations'
+import { calculate, getIncomeOptions, midpointHours } from '@/lib/calculations'
 import { LanguageToggle } from './LanguageToggle'
 import { ProgressBar } from './ProgressBar'
 import { ProfileScreen } from './screens/ProfileScreen'
@@ -35,6 +35,9 @@ const defaultState: DiagnosticState = {
   selectedTasks: [],
   hoursPerWeek: '',
   monthlyIncome: '',
+  customProfession: '',
+  customTasksNote: '',
+  customLostHours: '',
 }
 
 const PROGRESS_MAP: Record<number, number> = { 0: 0, 1: 25, 2: 50, 3: 75, 5: 100 }
@@ -123,9 +126,20 @@ export function DiagnosticTool() {
     ? (state.language === 'es' ? 35000 : 2750)
     : Number(state.monthlyIncome)
 
+  const hoursLostOverride = state.customLostHours
+    ? midpointHours(state.customLostHours)
+    : undefined
+
   const result =
     state.step === 5 && state.hoursPerWeek
-      ? calculate(state.selectedTasks, state.hoursPerWeek, resolvedIncome, state.language, state.profile)
+      ? calculate(
+          state.selectedTasks,
+          state.hoursPerWeek,
+          resolvedIncome,
+          state.language,
+          state.profile,
+          hoursLostOverride,
+        )
       : null
 
   const slideVariants = {
@@ -182,12 +196,29 @@ export function DiagnosticTool() {
             <ProfileScreen
               language={state.language}
               selected={state.profile}
+              customProfession={state.customProfession}
+              customTasksNote={state.customTasksNote}
+              customLostHours={state.customLostHours}
               onSelect={(p: Profile) => setState(prev => ({
                 ...prev,
                 profile: p,
                 selectedTasks: prev.profile !== p ? [] : prev.selectedTasks,
+                customProfession: '',
+                customTasksNote: '',
+                customLostHours: '',
               }))}
+              onEnterCustom={() => setState(prev => ({ ...prev, profile: null }))}
+              onCustomChange={(patch) => setState(prev => ({ ...prev, ...patch }))}
               onContinue={() => goTo(2)}
+              onContinueCustom={() => {
+                setState(prev => ({
+                  ...prev,
+                  profile: null,
+                  selectedTasks: [],
+                  step: 3,
+                }))
+                setDirection(1)
+              }}
               onBack={() => { window.location.href = '/' }}
             />
           )}
@@ -218,7 +249,7 @@ export function DiagnosticTool() {
                   goTo(5)
                 }
               }}
-              onBack={() => goTo(2)}
+              onBack={() => goTo(state.customLostHours ? 1 : 2)}
             />
           )}
           {state.step === 5 && result !== null && (
@@ -226,6 +257,17 @@ export function DiagnosticTool() {
               language={state.language}
               profile={state.profile}
               result={result}
+              customLead={
+                state.customLostHours
+                  ? {
+                      profession: state.customProfession,
+                      tasksNote: state.customTasksNote,
+                      lostHours: state.customLostHours,
+                      hoursRecoverable: result.hoursRecoverable,
+                      moneyLostPerMonth: result.moneyLostPerMonth,
+                    }
+                  : null
+              }
               onShare={handleShare}
               onBack={() => goTo(3)}
               onRestart={() => {

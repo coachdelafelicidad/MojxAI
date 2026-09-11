@@ -10,6 +10,8 @@ export type Profile =
   | 'architect'
   | 'business'
 
+export type HoursOption = '10-20h' | '20-30h' | '30-40h' | '40-50h' | '50h+'
+
 export interface Task {
   id: string
   emoji: string
@@ -25,6 +27,9 @@ export interface DiagnosticState {
   selectedTasks: string[]
   hoursPerWeek: string
   monthlyIncome: string
+  customProfession: string
+  customTasksNote: string
+  customLostHours: HoursOption | ''
 }
 
 export interface CalculationResult {
@@ -35,8 +40,6 @@ export interface CalculationResult {
   topTasks: Task[]
   allTasks: Task[]
 }
-
-export type HoursOption = '10-20h' | '20-30h' | '30-40h' | '40-50h' | '50h+'
 
 export const HOME_PROFILES: Profile[] = ['homemaker', 'parenting']
 

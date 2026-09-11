@@ -1,12 +1,10 @@
 'use client'
 
 import { motion, AnimatePresence } from 'framer-motion'
-import { Language, HoursOption, Profile, isHomeProfile } from '@/lib/types'
+import { Language, Profile, isHomeProfile } from '@/lib/types'
 import { getIncomeOptions } from '@/lib/calculations'
 import { t } from '@/lib/translations'
-
-const HOURS_OPTIONS_PRO: HoursOption[] = ['20-30h', '30-40h', '40-50h', '50h+']
-const HOURS_OPTIONS_HOME: HoursOption[] = ['10-20h', '20-30h', '30-40h', '40h+' as HoursOption]
+import { HoursRangePicker, HOURS_OPTIONS_HOME, HOURS_OPTIONS_PRO } from '@/components/HoursRangePicker'
 
 interface QuestionsScreenProps {
   language: Language
@@ -74,21 +72,11 @@ export function QuestionsScreen({
           <h2 className="font-display font-bold text-xl sm:text-2xl mb-6">
             {isHome ? tr.hoursQuestionHome : tr.hoursQuestion}
           </h2>
-          <div className="grid grid-cols-2 gap-3">
-            {hoursOptions.map((opt) => (
-              <button
-                key={opt}
-                onClick={() => onHoursChange(opt)}
-                className={`py-4 rounded-2xl text-sm font-bold border transition-all duration-200 ${
-                  hoursPerWeek === opt
-                    ? 'bg-[#00E5A0] text-black border-[#00E5A0] shadow-[0_0_20px_rgba(0,229,160,0.25)]'
-                    : 'border-[#1A1A1A] bg-[#111] text-[#CCCCCC] hover:border-[#2A2A2A] hover:bg-[#141414]'
-                }`}
-              >
-                {opt}
-              </button>
-            ))}
-          </div>
+          <HoursRangePicker
+            options={hoursOptions}
+            value={hoursPerWeek}
+            onChange={onHoursChange}
+          />
         </motion.div>
 
         {/* Income question — only for professional profiles */}
