@@ -2,75 +2,38 @@
 
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import Link from 'next/link'
-
-function LogoIcon({ size = 24 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect x="10" y="12" width="9" height="76" rx="2.5" fill="#C0C0C0"/>
-      <rect x="10" y="12" width="24" height="9" rx="2.5" fill="#C0C0C0"/>
-      <rect x="10" y="79" width="24" height="9" rx="2.5" fill="#C0C0C0"/>
-      <rect x="45.5" y="19" width="9" height="62" rx="4.5" fill="#00E5A0"/>
-      <rect x="81" y="12" width="9" height="76" rx="2.5" fill="#C0C0C0"/>
-      <rect x="66" y="12" width="24" height="9" rx="2.5" fill="#C0C0C0"/>
-      <rect x="66" y="79" width="24" height="9" rx="2.5" fill="#C0C0C0"/>
-    </svg>
-  )
-}
+import { useRouter } from 'next/navigation'
 import { Language, Profile, DiagnosticState, isHomeProfile } from '@/lib/types'
 import { calculate, getIncomeOptions, midpointHours } from '@/lib/calculations'
-import { LanguageToggle } from './LanguageToggle'
-import { ProgressBar } from './ProgressBar'
+import { DiagnosticChrome } from './DiagnosticChrome'
 import { ProfileScreen } from './screens/ProfileScreen'
 import { TasksScreen } from './screens/TasksScreen'
 import { QuestionsScreen } from './screens/QuestionsScreen'
 import { ResultScreen } from './screens/ResultScreen'
-
-const STORAGE_KEY = 'mojxai_diagnostic'
-
-const defaultState: DiagnosticState = {
-  step: 1,
-  language: 'es',
-  profile: null,
-  selectedTasks: [],
-  hoursPerWeek: '',
-  monthlyIncome: '',
-  customProfession: '',
-  customTasksNote: '',
-  customLostHours: '',
-}
+import {
+  DIAGNOSTIC_STORAGE_KEY,
+  defaultDiagnosticState,
+  loadDiagnosticState,
+  saveDiagnosticState,
+} from '@/lib/diagnostic-storage'
 
 const PROGRESS_MAP: Record<number, number> = { 0: 0, 1: 25, 2: 50, 3: 75, 5: 100 }
 
-function detectLanguage(): Language {
-  return 'es'
-}
-
 export function DiagnosticTool() {
-  const [state, setState] = useState<DiagnosticState>(defaultState)
+  const router = useRouter()
+  const [state, setState] = useState<DiagnosticState>(defaultDiagnosticState)
   const [direction, setDirection] = useState(1)
+  const [hydrated, setHydrated] = useState(false)
 
   useEffect(() => {
-    const saved = localStorage.getItem(STORAGE_KEY)
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved) as Partial<DiagnosticState>
-        if (parsed.step === 5) {
-          setState({ ...defaultState, ...parsed, language: detectLanguage() })
-          return
-        }
-      } catch {
-        // ignore parse errors
-      }
-    }
-    setState(prev => ({ ...prev, language: detectLanguage() }))
+    setState(loadDiagnosticState())
+    setHydrated(true)
   }, [])
 
   useEffect(() => {
-    if (state.step >= 1) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
-    }
-  }, [state])
+    if (!hydrated) return
+    saveDiagnosticState(state)
+  }, [state, hydrated])
 
   function goTo(step: number) {
     setDirection(step > state.step ? 1 : -1)
@@ -79,9 +42,7 @@ export function DiagnosticTool() {
 
   function setLanguage(language: Language) {
     setState(prev => {
-      // If user chose "prefer not to say", keep that choice across language switches
       if (prev.monthlyIncome === 'prefer_not') return { ...prev, language }
-      const incomeOptions = getIncomeOptions(language)
       const currentIncome = parseInt(prev.monthlyIncome || '0')
       const esOptions = getIncomeOptions('es')
       const enOptions = getIncomeOptions('en')
@@ -90,7 +51,7 @@ export function DiagnosticTool() {
       const newIncomeValue =
         idx !== -1 && idx < 4
           ? getIncomeOptions(language)[idx % 4]?.value
-          : incomeOptions.find(o => o.value === currentIncome)?.value
+          : getIncomeOptions(language).find(o => o.value === currentIncome)?.value
 
       return {
         ...prev,
@@ -121,7 +82,6 @@ export function DiagnosticTool() {
     }
   }
 
-  // "prefer_not" → use mid-range income so calculation still works
   const resolvedIncome = state.monthlyIncome === 'prefer_not'
     ? (state.language === 'es' ? 35000 : 2750)
     : Number(state.monthlyIncome)
@@ -149,41 +109,14 @@ export function DiagnosticTool() {
   }
 
   return (
-    <div className="relative min-h-screen bg-[#0A0A0A]">
-
-      {/* ── Header fijo unificado — visible en TODAS las pantallas ── */}
-      <header
-        className="fixed top-0 left-0 right-0 z-[100] flex items-center justify-between px-4 h-12"
-        style={{
-          background: 'rgba(5,5,5,0.96)',
-          backdropFilter: 'blur(12px)',
-          WebkitBackdropFilter: 'blur(12px)',
-          borderBottom: '1px solid rgba(255,255,255,0.04)',
-        }}
-      >
-        {/* Logo — enlace directo a la página principal */}
-        <Link
-          href="/"
-          className="flex items-center gap-2 hover:opacity-70 transition-opacity duration-200"
-        >
-          <LogoIcon size={18} />
-          <span className="font-display font-black" style={{ fontSize: '11px', letterSpacing: '0.15em' }}>
-            <span className="text-white">Mo</span><span style={{ color: '#00E5A0' }}>j</span><span className="text-white">xAI</span>
-          </span>
-        </Link>
-
-        {/* Toggle de idioma */}
-        <LanguageToggle language={state.language} onChange={setLanguage} />
-      </header>
-
-      {/* Barra de progreso justo bajo el header */}
-      <div className="fixed top-12 left-0 right-0 z-[99]">
-        <ProgressBar progress={PROGRESS_MAP[state.step] ?? 0} />
-      </div>
-
+    <DiagnosticChrome
+      language={state.language}
+      onLanguageChange={setLanguage}
+      progress={PROGRESS_MAP[state.step] ?? 0}
+    >
       <AnimatePresence mode="wait" custom={direction}>
         <motion.div
-          key={state.step}
+          key={hydrated ? state.step : 'boot'}
           custom={direction}
           variants={slideVariants}
           initial="enter"
@@ -192,13 +125,10 @@ export function DiagnosticTool() {
           transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
           className="min-h-screen"
         >
-          {state.step === 1 && (
+          {!hydrated ? null : state.step === 1 && (
             <ProfileScreen
               language={state.language}
               selected={state.profile}
-              customProfession={state.customProfession}
-              customTasksNote={state.customTasksNote}
-              customLostHours={state.customLostHours}
               onSelect={(p: Profile) => setState(prev => ({
                 ...prev,
                 profile: p,
@@ -207,22 +137,11 @@ export function DiagnosticTool() {
                 customTasksNote: '',
                 customLostHours: '',
               }))}
-              onEnterCustom={() => setState(prev => ({ ...prev, profile: null }))}
-              onCustomChange={(patch) => setState(prev => ({ ...prev, ...patch }))}
               onContinue={() => goTo(2)}
-              onContinueCustom={() => {
-                setState(prev => ({
-                  ...prev,
-                  profile: null,
-                  selectedTasks: [],
-                  step: 3,
-                }))
-                setDirection(1)
-              }}
               onBack={() => { window.location.href = '/' }}
             />
           )}
-          {state.step === 2 && (
+          {hydrated && state.step === 2 && (
             <TasksScreen
               language={state.language}
               profile={state.profile}
@@ -232,7 +151,7 @@ export function DiagnosticTool() {
               onBack={() => goTo(1)}
             />
           )}
-          {state.step === 3 && (
+          {hydrated && state.step === 3 && (
             <QuestionsScreen
               language={state.language}
               profile={state.profile}
@@ -241,7 +160,6 @@ export function DiagnosticTool() {
               onHoursChange={(h) => setState(prev => ({ ...prev, hoursPerWeek: h }))}
               onIncomeChange={(i) => setState(prev => ({ ...prev, monthlyIncome: i }))}
               onContinue={() => {
-                // For home profiles, auto-set a placeholder income (unused in calc)
                 if (isHomeProfile(state.profile) && !state.monthlyIncome) {
                   setState(prev => ({ ...prev, monthlyIncome: '1', step: 5 }))
                   setDirection(1)
@@ -249,10 +167,13 @@ export function DiagnosticTool() {
                   goTo(5)
                 }
               }}
-              onBack={() => goTo(state.customLostHours ? 1 : 2)}
+              onBack={() => {
+                if (state.customLostHours) router.push('/diagnostico/otro-perfil')
+                else goTo(2)
+              }}
             />
           )}
-          {state.step === 5 && result !== null && (
+          {hydrated && state.step === 5 && result !== null && (
             <ResultScreen
               language={state.language}
               profile={state.profile}
@@ -271,18 +192,18 @@ export function DiagnosticTool() {
               onShare={handleShare}
               onBack={() => goTo(3)}
               onRestart={() => {
-                localStorage.removeItem(STORAGE_KEY)
-                setState({ ...defaultState, language: state.language })
+                localStorage.removeItem(DIAGNOSTIC_STORAGE_KEY)
+                setState({ ...defaultDiagnosticState, language: state.language })
               }}
             />
           )}
-          {state.step === 5 && result === null && (
+          {hydrated && state.step === 5 && result === null && (
             <div className="flex items-center justify-center min-h-screen">
               <p className="text-[#888888]">Loading results...</p>
             </div>
           )}
         </motion.div>
       </AnimatePresence>
-    </div>
+    </DiagnosticChrome>
   )
 }

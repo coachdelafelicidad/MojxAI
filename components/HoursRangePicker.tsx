@@ -6,7 +6,7 @@ export const HOURS_OPTIONS_PRO: HoursOption[] = ['20-30h', '30-40h', '40-50h', '
 export const HOURS_OPTIONS_HOME: HoursOption[] = ['10-20h', '20-30h', '30-40h', '40h+' as HoursOption]
 
 interface HoursRangePickerProps {
-  options: HoursOption[]
+  options: readonly string[]
   value: string
   onChange: (value: string) => void
 }
