@@ -570,6 +570,22 @@ export function ResultScreen({ language, profile, result, customLead, onShare, o
                   : (language === 'es' ? 'Instalar mi sistema ahora →' : 'Install my system now →')}
               </button>
 
+              <a
+                href="https://nas.com/lasenoraquesabeia/sessions/diagnstico-express-de-ia-15-min-para-descubrir-cuntas-horas-puedes-recuperar"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-3 w-full font-display font-bold py-3.5 px-4 rounded-2xl text-sm text-center block transition-all duration-300 hover:bg-[#00E5A0]/10"
+                style={{
+                  color: '#00E5A0',
+                  border: '1px solid rgba(0,229,160,0.45)',
+                  background: 'transparent',
+                }}
+              >
+                {language === 'es'
+                  ? 'Agenda Videollamada de Diagnóstico de 15 min'
+                  : 'Book a 15-min Diagnostic Video Call'}
+              </a>
+
               <p className="text-[#1E4A30] text-xs mt-3">
                 {language === 'es' ? 'Para equipos: $397 USD/seat · mínimo 3 · ' : 'For teams: $397 USD/seat · min 3 · '}
                 <a href="mailto:hola@mojxai.com" className="text-[#00E5A0]/50 hover:text-[#00E5A0] transition-colors">
